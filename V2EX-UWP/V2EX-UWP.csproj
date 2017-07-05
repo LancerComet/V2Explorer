@@ -98,7 +98,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Service\PageService.cs" />
+    <Compile Include="Service\ViewService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\TopicService.cs" />
     <Compile Include="Views\Page.About.xaml.cs">

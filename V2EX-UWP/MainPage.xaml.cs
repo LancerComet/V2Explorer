@@ -72,7 +72,13 @@ namespace V2EX {
     /// </summary>
     /// 
     void navigateToMainPage () {
-      AppCanvas.Navigate(typeof(Views.TopicPage));
+      Service.ViewConfig.views.Any(view => {
+        if (view.isSelected) {
+          AppCanvas.Navigate(view.page);
+          return true;
+        }
+        return false;
+      });
     }
 
     /// <summary>

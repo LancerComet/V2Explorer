@@ -11,18 +11,20 @@ namespace V2EX.Service {
     public string icon;
     public string label;
     public Type page;
+    public bool isSelected = false;
 
-    public View (string icon = "", string label = "", Type page = null) {
+    public View (string icon = "", string label = "", Type page = null, bool isSelected = false) {
       this.icon = icon;
       this.label = label;
       this.page = page;
+      this.isSelected = isSelected;
     }
   }
 
   // 视图配置服务.
   public class ViewConfig {
     public static List<View> views = new List<View> () {
-      new View("&#xED0C;", "话题", typeof(V2EX.Views.TopicPage)),
+      new View("&#xED0C;", "话题", typeof(V2EX.Views.TopicPage), true),
       new View("&#xECCB;", "节点", typeof(V2EX.Views.NodesPage)),
       new View("&#xE725;", "通知", typeof(V2EX.Views.NotifyPage)),
       new View("&#xE00A;", "收藏", typeof(V2EX.Views.FavouritePage)),
