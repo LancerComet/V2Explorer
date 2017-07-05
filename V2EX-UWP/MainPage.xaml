@@ -31,21 +31,28 @@
 
                     <!-- Hamburg Menu -->
                     <StackPanel Grid.Row="0">
-                        <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="toggleSplitMenu"></Button>
+                        <Button Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" BorderThickness="0" Background="Transparent" Click="toggleSplitMenu"></Button>
                     </StackPanel>
 
-                    <ListBox Name="ViewMenus" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="Single" Background="Transparent" SelectionChanged="navigateToView">
-                        <ListBox.ItemTemplate>
+                    <ListView Name="ViewsMenu" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="None" Background="Transparent">
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ListBoxItem Padding="6">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="{Binding Path=icon}"></TextBlock>
-                                        <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding Path=label}"></TextBlock>
-                                    </StackPanel>
-                                </ListBoxItem>
+                                <ListViewItem Background="Green" Padding="0">
+                                    <Button Click="navigateTo" Tag="{Binding page}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>
+                                            <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding label}"></TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                </ListViewItem>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <StackPanel Grid.Row="2" HorizontalAlignment="Right">
+                        <AppBarButton Label="关于" Icon="More"></AppBarButton>
+                    </StackPanel>
+
 
                     <!--<ListBox Grid.Row="2" Name="ViewMenusBottom" SelectionMode="Single" SelectionChanged="navigateToView">
                         <ListBoxItem Name="AboutPage" Padding="17">

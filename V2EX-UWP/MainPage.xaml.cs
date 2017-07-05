@@ -106,9 +106,9 @@ namespace V2EX {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// 
-    void navigateToView (object sender, SelectionChangedEventArgs e) {
-      var selectedIndex = ViewMenus.SelectedIndex;
-      AppCanvas.Navigate(Service.ViewConfig.views[selectedIndex].page);
+    private void navigateTo (object sender, RoutedEventArgs e) {
+      var targetPage = ((Button)sender).Tag as Type;
+      AppCanvas.Navigate(targetPage);
     }
   }
 }
