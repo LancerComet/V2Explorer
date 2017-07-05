@@ -27,10 +27,10 @@
 
                     <!-- Hamburg Menu -->
                     <StackPanel Grid.Row="0">
-                        <Button Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="50" BorderThickness="0" Background="Transparent" Click="toggleSplitMenu"></Button>
+                        <Button Name="HamburgerButton" Content="&#xE700;" Click="toggleSplitMenu" Style="{StaticResource .hamburger-menu}"></Button>
                     </StackPanel>
 
-                    <!-- Nav Menu -->
+                    <!-- Views Menu -->
                     <ListView Name="ViewsMenu" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="None">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -42,7 +42,7 @@
                         
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Button Click="navigateTo" Tag="{Binding page}" Width="150" Height="50" BorderThickness="0" HorizontalContentAlignment="Left" VerticalAlignment="Center" Background="Transparent">
+                                <Button Click="navigateTo" Tag="{Binding page}" Style="{StaticResource .view-menu}">
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel Background="#4fc315" Width="5" Height="30" Margin="-8" HorizontalAlignment="Left" Visibility="{Binding isSelected}"></StackPanel>
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Margin="9, 0, 0, 0" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>

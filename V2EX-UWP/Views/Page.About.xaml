@@ -12,20 +12,28 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="#34495e"></Setter>
+            </Style>
+        </Grid.Resources>
+
         <StackPanel Padding="20" Grid.Row="0">
-            <TextBlock FontSize="40" VerticalAlignment="Center" Padding="0, 0, 0, 10">V2Explorer</TextBlock>
-            <TextBlock Padding="0, 0, 0, 12">「大人の階段昇る、君はまだシンデレラさ」</TextBlock>
+            <TextBlock FontSize="40" VerticalAlignment="Center" Margin="0, 0, 0, 10">V2Explorer</TextBlock>
             <TextBlock>一个奇怪的 V2EX UWP 客户端.</TextBlock>
         </StackPanel>
-
+        
         <StackPanel Padding="20" Grid.Row="1">
+            <TextBlock Padding="0, 0, 0, 12">「大人の階段昇る、君はまだシンデレラさ」</TextBlock>
             <TextBlock>© 2017 LancerComet</TextBlock>
             <TextBlock># Carry Your World #</TextBlock>
         </StackPanel>
 
-        <StackPanel Padding="20, 0" Grid.Row="2">
+
+        <StackPanel Padding="20, 0" Grid.Row="3">
             <TextBlock>V2Explorer is released under MIT License.</TextBlock>
         </StackPanel>
     </Grid>
