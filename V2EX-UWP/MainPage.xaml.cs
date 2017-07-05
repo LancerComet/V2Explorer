@@ -30,13 +30,22 @@ using Windows.UI.Core;
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
 namespace V2EX {
+  public class ViewModel {
+    public List<View> views {
+      get {
+        return Service.ViewConfig.views;
+      }
+    }
+  }
+
+
   public partial class MainPage : Page {
     public MainPage() {
       this.InitializeComponent();
       this.initBackButton();
       this.navigateToMainPage();
+      DataContext = new ViewModel();
     }
-
     /// <summary>
     /// 初始化 BackButton 相关事件.
     /// </summary>

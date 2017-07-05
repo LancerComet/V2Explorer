@@ -8,6 +8,35 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock>This is the topic page.</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Padding="20, 20, 20, 10">
+            <TextBlock FontSize="30">话题</TextBlock>
+        </StackPanel>
+
+        <Pivot x:Name="rootPivot" Grid.Row="1" ItemsSource="{Binding nodes}">
+            <Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=label}" FontSize="16"></TextBlock>
+                </DataTemplate>
+            </Pivot.HeaderTemplate>
+            
+            <Pivot.ItemTemplate>
+                <DataTemplate>
+                    <PivotItem Margin="0">
+                        <Grid Background="Red">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0">Content goes here!</TextBlock>
+                        </Grid>
+                    </PivotItem>
+                </DataTemplate>
+            </Pivot.ItemTemplate>
+        </Pivot>
     </Grid>
 </Page>
