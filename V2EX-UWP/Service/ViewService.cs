@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace V2EX.Service {
   // 导航项类型.
   public class View {
-    public string icon;
-    public string label;
-    public Type page;
-    public bool isSelected = false;
+    public string icon { get; set; }
+    public string label { get; set; }
+    public Type page { get; set; }
+    public bool isSelected { get; set; }
 
     public View (string icon = "", string label = "", Type page = null, bool isSelected = false) {
       this.icon = icon;
@@ -24,11 +24,11 @@ namespace V2EX.Service {
   // 视图配置服务.
   public class ViewConfig {
     public static List<View> views = new List<View> () {
-      new View("&#xED0C;", "话题", typeof(V2EX.Views.TopicPage), true),
-      new View("&#xECCB;", "节点", typeof(V2EX.Views.NodesPage)),
-      new View("&#xE725;", "通知", typeof(V2EX.Views.NotifyPage)),
-      new View("&#xE00A;", "收藏", typeof(V2EX.Views.FavouritePage)),
-      new View("", "关于", typeof(V2EX.Views.AboutPage))
+      new View("\uE7E7", "话题", typeof(V2EX.Views.TopicPage), true),
+      new View("\uECCB", "节点", typeof(V2EX.Views.NodesPage)),
+      new View("\uE725", "通知", typeof(V2EX.Views.NotifyPage)),
+      new View("\uE00A", "收藏", typeof(V2EX.Views.FavouritePage)),
+      new View("\uE0A5", "关于", typeof(V2EX.Views.AboutPage))
     };
   }
 }

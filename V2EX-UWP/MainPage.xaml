@@ -13,7 +13,7 @@
             DisplayMode="CompactOverlay"
             IsPaneOpen="False"
             CompactPaneLength="50"
-            OpenPaneLength="150"
+            OpenPaneLength="450"
         >
 
             <SplitView.Pane>
@@ -30,44 +30,27 @@
                         <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="toggleSplitMenu"></Button>
                     </StackPanel>
 
-                    <ListBox Name="ViewMenus" Grid.Row="1" SelectionMode="Single" Background="Transparent" SelectionChanged="navigateToView">
-                        <ListBoxItem Name="TopicPage" Padding="17">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">&#xED0C;</TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0">话题</TextBlock>
-                            </StackPanel>
-                        </ListBoxItem>
-
-                        <ListBoxItem Name="NodesPage" Padding="17">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">&#xECCB;</TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0">节点</TextBlock>
-                            </StackPanel>
-                        </ListBoxItem>
-
-                        <ListBoxItem Name="NotifyPage" Padding="17">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">&#xE725;</TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0">通知</TextBlock>
-                            </StackPanel>
-                        </ListBoxItem>
-
-                        <ListBoxItem Name="FavouritePage" Padding="17">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">&#xE00A;</TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0">收藏</TextBlock>
-                            </StackPanel>
-                        </ListBoxItem>
+                    <ListBox Name="ViewMenus" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="Single" Background="Transparent" SelectionChanged="navigateToView">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem Name="TopicPage" Padding="6">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="{Binding Path=icon}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding Path=label}"></TextBlock>
+                                    </StackPanel>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <ListBox Grid.Row="2" Name="ViewMenusBottom" SelectionMode="Single" SelectionChanged="navigateToView">
+                    <!--<ListBox Grid.Row="2" Name="ViewMenusBottom" SelectionMode="Single" SelectionChanged="navigateToView">
                         <ListBoxItem Name="AboutPage" Padding="17">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">&#xE00A;</TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0">关于</TextBlock>
                             </StackPanel>
                         </ListBoxItem>
-                    </ListBox>
+                    </ListBox>-->
                 </Grid>
 
             </SplitView.Pane>
