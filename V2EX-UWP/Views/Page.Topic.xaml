@@ -8,6 +8,32 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock>This is the topic page.</TextBlock>
+        <Pivot x:Name="rootPivot" Title="话题">
+            <Pivot.RightHeader>
+                <StackPanel></StackPanel>
+            </Pivot.RightHeader>
+            
+            <PivotItem Header="Pivot Item 1">
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 1."/>
+            </PivotItem>
+            <PivotItem Header="Pivot Item 2">
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 2."/>
+            </PivotItem>
+            <PivotItem Header="Pivot Item 3">
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 3."/>
+            </PivotItem>
+
+            <PivotItem Header="Pivot Item 3">
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 3."/>
+            </PivotItem>
+            <PivotItem Header="Pivot Item 3">
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 3."/>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

@@ -13,7 +13,7 @@
             DisplayMode="CompactOverlay"
             IsPaneOpen="False"
             CompactPaneLength="50"
-            OpenPaneLength="450"
+            OpenPaneLength="150"
         >
 
             <SplitView.Pane>
@@ -25,6 +25,10 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
+                    <Grid.Resources>
+                        <Style TargetType="StackPanel"></Style>
+                    </Grid.Resources>
+
                     <!-- Hamburg Menu -->
                     <StackPanel Grid.Row="0">
                         <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="toggleSplitMenu"></Button>
@@ -33,7 +37,7 @@
                     <ListBox Name="ViewMenus" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="Single" Background="Transparent" SelectionChanged="navigateToView">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <ListBoxItem Name="TopicPage" Padding="6">
+                                <ListBoxItem Padding="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="{Binding Path=icon}"></TextBlock>
                                         <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding Path=label}"></TextBlock>
