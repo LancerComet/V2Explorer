@@ -4,14 +4,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace V2EX.Service {
   // 导航项类型.
-  public class View {
+  public class View : INotifyPropertyChanged {
     public string icon { get; set; }
     public string label { get; set; }
     public Type page { get; set; }
-    public bool isSelected { get; set; }
+
+    private bool _isSelected;
+    public bool isSelected {
+      get {
+        return _isSelected; 
+      }
+      set {
+        _isSelected = value;
+        OnProperityChanged("isSelected");
+      }
+    }
+
+    // 实现内部 Notify 接口.
+    // 用于通知 XAML 进行数据更新.
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnProperityChanged (string properityName) {
+      PropertyChangedEventHandler handler = PropertyChanged;
+      if (handler != null) {
+        handler(this, new PropertyChangedEventArgs(properityName));
+      }
+    }
 
     public View (string icon = "", string label = "", Type page = null, bool isSelected = false) {
       this.icon = icon;

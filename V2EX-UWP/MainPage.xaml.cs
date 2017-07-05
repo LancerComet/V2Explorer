@@ -109,6 +109,9 @@ namespace V2EX {
     private void navigateTo (object sender, RoutedEventArgs e) {
       var targetPage = ((Button)sender).Tag as Type;
       AppCanvas.Navigate(targetPage);
+      Service.ViewConfig.views.ForEach(item => {
+        item.isSelected = (item.page == targetPage);
+      });
     }
   }
 }

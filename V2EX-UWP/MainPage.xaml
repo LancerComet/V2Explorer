@@ -12,46 +12,50 @@
             Name="AppSplitView"
             DisplayMode="CompactOverlay"
             IsPaneOpen="False"
-            CompactPaneLength="50"
+            CompactPaneLength="48"
             OpenPaneLength="150"
         >
 
             <SplitView.Pane>
                 <!-- Menu Buttons -->
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0.4,0">
-                    <Grid.RowDefinitions>
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions> 
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <Grid.Resources>
-                        <Style TargetType="StackPanel"></Style>
-                    </Grid.Resources>
-
                     <!-- Hamburg Menu -->
                     <StackPanel Grid.Row="0">
-                        <Button Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" BorderThickness="0" Background="Transparent" Click="toggleSplitMenu"></Button>
+                        <Button Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="50" BorderThickness="0" Background="Transparent" Click="toggleSplitMenu"></Button>
                     </StackPanel>
 
-                    <ListView Name="ViewsMenu" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="None" Background="Transparent">
+                    <!-- Nav Menu -->
+                    <ListView Name="ViewsMenu" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+                                <Setter Property="Padding" Value="0"></Setter>
+                                <Setter Property="Margin" Value="0, 0, -15, 0"></Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ListViewItem Background="Green" Padding="0">
-                                    <Button Click="navigateTo" Tag="{Binding page}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>
-                                            <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding label}"></TextBlock>
-                                        </StackPanel>
-                                    </Button>
-                                </ListViewItem>
+                                <Button Click="navigateTo" Tag="{Binding page}" Width="150" Height="50" BorderThickness="0" HorizontalContentAlignment="Left" VerticalAlignment="Center" Background="Transparent">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Background="#4fc315" Width="5" Height="30" Margin="-8" HorizontalAlignment="Left" Visibility="{Binding isSelected}"></StackPanel>
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Margin="9, 0, 0, 0" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding label}"></TextBlock>
+                                    </StackPanel>
+                                </Button>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
 
-                    <StackPanel Grid.Row="2" HorizontalAlignment="Right">
+                    <!--<StackPanel Grid.Row="2" HorizontalAlignment="Right">
                         <AppBarButton Label="关于" Icon="More"></AppBarButton>
-                    </StackPanel>
+                    </StackPanel>-->
 
 
                     <!--<ListBox Grid.Row="2" Name="ViewMenusBottom" SelectionMode="Single" SelectionChanged="navigateToView">
