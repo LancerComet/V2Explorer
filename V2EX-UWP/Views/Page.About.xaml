@@ -12,7 +12,6 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid.Resources>
@@ -32,8 +31,7 @@
             <TextBlock># Carry Your World #</TextBlock>
         </StackPanel>
 
-
-        <StackPanel Padding="20, 0" Grid.Row="3">
+        <StackPanel Padding="20, 0" Grid.Row="2">
             <TextBlock>V2Explorer is released under MIT License.</TextBlock>
         </StackPanel>
     </Grid>

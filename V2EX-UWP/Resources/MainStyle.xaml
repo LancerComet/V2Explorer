@@ -6,11 +6,29 @@
         <Setter Property="Width" Value="48"></Setter>
         <Setter Property="Height" Value="50"></Setter>
         <Setter Property="Foreground" Value="#fff"></Setter>
-        <Setter Property="Background" Value="#4fc315"></Setter>
+        <Setter Property="Background" Value="#3f9443"></Setter>
         <Setter Property="FontFamily" Value="Segoe MDL2 Assets"></Setter>
         <Setter Property="BorderThickness" Value="0"></Setter>
     </Style>
-    
+
+    <Style x:Key=".hamburger-avatar" TargetType="StackPanel">
+        <Setter Property="Width" Value="150"></Setter>
+        <Setter Property="Height" Value="70"></Setter>
+    </Style>
+
+    <Style x:Key=".hamburger-avatar-img" TargetType="StackPanel">
+        <Setter Property="Width" Value="30"></Setter>
+        <Setter Property="Height" Value="30"></Setter>
+        <Setter Property="Margin" Value="9, 0"></Setter>
+        <Setter Property="Background" Value="#ccc"></Setter>
+        <Setter Property="CornerRadius" Value="50"></Setter>
+    </Style>
+
+    <Style x:Key=".hamburger-avatar-username" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#34495e"></Setter>
+        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    </Style>
+
     <Style x:Key=".view-menu" TargetType="Button">
         <Setter Property="Width" Value="150"></Setter>
         <Setter Property="Height" Value="50"></Setter>
@@ -22,7 +40,7 @@
     </Style>
 
     <Style x:Key=".view-menu-actived" TargetType="Button" BasedOn="{StaticResource .view-menu}">
-        <Setter Property="Background" Value="#4fc315"></Setter>
+        <Setter Property="Background" Value="#3f9443"></Setter>
         <Setter Property="Foreground" Value="#fff"></Setter>
     </Style>
     

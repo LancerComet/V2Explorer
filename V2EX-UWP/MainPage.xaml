@@ -19,19 +19,37 @@
             <SplitView.Pane>
                 <!-- Menu Buttons -->
                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <Grid.RowDefinitions> 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
+
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#34495e"></Setter>
+                        </Style>
+                    </Grid.Resources>
 
                     <!-- Hamburg Menu -->
                     <StackPanel Grid.Row="0">
                         <Button Name="HamburgerButton" Content="&#xE700;" Click="toggleSplitMenu" Style="{StaticResource .hamburger-menu}"></Button>
                     </StackPanel>
 
+                    <!-- Avatar -->
+                    <StackPanel Grid.Row="1">
+                        <Button BorderThickness="0" Padding="0" Background="Transparent">
+                            <StackPanel Orientation="Horizontal" Style="{StaticResource .hamburger-avatar}">
+                                <StackPanel Style="{StaticResource .hamburger-avatar-img}"></StackPanel>
+                                <TextBlock Style="{StaticResource .hamburger-avatar-username}">请登陆</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
                     <!-- Views Menu -->
-                    <ListView Name="ViewsMenu" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="None">
+                    <ListView Grid.Row="2" Name="ViewsMenu" ItemsSource="{Binding views}" SelectionMode="None">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
@@ -39,12 +57,12 @@
                                 <Setter Property="Margin" Value="0, 0, -15, 0"></Setter>
                             </Style>
                         </ListView.ItemContainerStyle>
-                        
+
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Button Click="navigateTo" Tag="{Binding page}" Style="{StaticResource .view-menu}">
                                     <StackPanel Orientation="Horizontal">
-                                        <StackPanel Background="#4fc315" Width="5" Height="30" Margin="-8" HorizontalAlignment="Left" Visibility="{Binding isSelected}"></StackPanel>
+                                        <StackPanel Background="#3f9443" Width="5" Height="30" Margin="-8" HorizontalAlignment="Left" Visibility="{Binding isSelected}"></StackPanel>
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Margin="9, 0, 0, 0" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>
                                         <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding label}"></TextBlock>
                                     </StackPanel>
