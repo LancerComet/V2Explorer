@@ -24,7 +24,7 @@ namespace V2EX.Service.Node {
   }
 
   /// <summary>
-  /// 节点页服务.
+  /// 节点服务.
   /// </summary>
   public class NodesService : INotifyPropertyChanged {
     /// <summary>
@@ -42,19 +42,26 @@ namespace V2EX.Service.Node {
     }
 
     /// <summary>
+    /// 请求回调委托定义.
+    /// </summary>
+    public delegate void RequestCallback();
+
+    /// <summary>
     /// 获取所有节点.
     /// </summary>
     /// 
-    public async void getAllNodes() {
+    public async void getAllNodes(RequestCallback resolve = null, RequestCallback reject = null) {
       HttpClient client = new HttpClient();
       try {
-        HttpResponseMessage res = await client.GetAsync(new Uri("http://127.0.0.1:3000"));
+        HttpResponseMessage res = await client.GetAsync(new Uri("https://www.v2ex.com/api/nodes/all.json"));
         if (res != null && res.StatusCode == HttpStatusCode.Ok) {
           var result = JsonConvert.DeserializeObject<List<Node>>(res.Content.ToString());  // 使用 JSON.NET 将 JSON 字符串转为 List<Node>.
           this.allNodes = result;
+          resolve?.Invoke();
         }
       } catch {
         // TODO: 错误提示.
+        reject?.Invoke();
       }
     }
 

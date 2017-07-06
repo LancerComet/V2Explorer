@@ -5,7 +5,13 @@
     xmlns:local="using:V2EX.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:V2EX.Converter"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
+        <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -35,15 +41,17 @@
             <StackPanel Background="#3f9443" Height="160" Margin="0, 20"></StackPanel>
         </StackPanel>
 
+        <!-- Nodes List. -->
         <GridView Grid.Row="1" Name="NodeList" Padding="20" ItemsSource="{Binding nodeSrv.allNodes}" SelectionMode="None">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Button Width="190" Height="100" Margin="5, 0, 0, 5" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Background="Transparent">
+                    <Button Width="190" Height="120" Margin="5, 0, 0, 5" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Background="Transparent">
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Width="6" Height="34" Margin="0, 0, 10, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#41b883"></StackPanel>
                             <StackPanel Orientation="Vertical" Width="150">
                                 <TextBlock Text="{Binding title}" Margin="0, 0, 0, 5" FontSize="20" VerticalAlignment="Center"></TextBlock>
-                                <TextBlock Text="{Binding header}" FontSize="14" TextWrapping="Wrap" Foreground="#777"></TextBlock>
+                                <StackPanel Width="190" Height="1" Background="#bbb" HorizontalAlignment="Left"></StackPanel>
+                                <TextBlock Text="{Binding header}" Margin="0, 5, 0, 0" FontSize="14" TextWrapping="Wrap" Foreground="#777"></TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </Button>
@@ -51,5 +59,12 @@
             </GridView.ItemTemplate>
         </GridView>
 
+        <!-- Loading Progress. -->
+        <ScrollViewer Background="#fff" Grid.Row="1" Visibility="{Binding loading, Converter={StaticResource trueToVisible}}">
+            <StackPanel VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Foreground="Green"></ProgressBar>
+                <TextBlock HorizontalAlignment="Center" Margin="20" Foreground="Green">正在玩命载入中... _(•̀ᴗ•́ 」∠ ❀)_</TextBlock>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
