@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <srv:LoginService x:Key="loginSrv" isLogin="False"></srv:LoginService>
+        <!--<srv:LoginService x:Key="loginSrv" isLogin="False"></srv:LoginService>-->
         <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
         <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
     </Page.Resources>
@@ -40,12 +40,23 @@
                     </Grid.Resources>
 
                     <!-- Hamburg Menu -->
-                    <StackPanel Grid.Row="0">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <Button Name="HamburgerButton" Content="&#xE700;" Click="toggleSplitMenu" Style="{StaticResource .hamburger-menu}"></Button>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="8, 0, 0, 0"></Setter>
+                                    <Setter Property="FontSize" Value="12"></Setter>
+                                    <Setter Property="Foreground" Value="#aaa"></Setter>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock FontSize="12">V2Explorer</TextBlock>
+                            <TextBlock FontSize="12">0.1.0</TextBlock>
+                        </StackPanel>
                     </StackPanel>
 
                     <!-- Avatar: Guest -->
-                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Source={StaticResource loginSrv}, Converter={StaticResource falseToVisible}}">
+                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Converter={StaticResource falseToVisible}}">
                         <Button BorderThickness="0" Padding="0" Background="Transparent">
                             <StackPanel Orientation="Horizontal" Style="{StaticResource .hamburger-avatar}">
                                 <StackPanel Style="{StaticResource .hamburger-avatar-img}"></StackPanel>
@@ -55,7 +66,7 @@
                     </StackPanel>
                     
                     <!-- Avatar: User -->
-                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Source={StaticResource loginSrv}, Converter={StaticResource trueToVisible}}">
+                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Converter={StaticResource trueToVisible}}">
                         
                     </StackPanel>
 

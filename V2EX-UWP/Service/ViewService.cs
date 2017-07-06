@@ -20,18 +20,17 @@ namespace V2EX.Service {
       }
       set {
         _isSelected = value;
-        OnProperityChanged("isSelected");
+        notify("isSelected");
       }
     }
 
     // 实现内部 Notify 接口.
     // 用于通知 XAML 进行数据更新.
     public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnProperityChanged (string properityName) {
+    protected void notify (string propertyName) {
       PropertyChangedEventHandler handler = PropertyChanged;
       if (handler != null) {
-        handler(this, new PropertyChangedEventArgs(properityName));
+        handler(this, new PropertyChangedEventArgs(propertyName));
       }
     }
 
@@ -47,10 +46,10 @@ namespace V2EX.Service {
   public class ViewConfig {
     public static List<View> views = new List<View> () {
       new View("\uE7E7", "话题", typeof(V2EX.Views.TopicPage), true),
-      new View("\uECCB", "节点", typeof(V2EX.Views.NodesPage)),
-      new View("\uE725", "通知", typeof(V2EX.Views.NotifyPage)),
+      new View("\uECCB", "节点", typeof(V2EX.Views.Nodes.View)),
+      new View("\uE725", "通知", typeof(V2EX.Views.Notify.View)),
       new View("\uE00A", "收藏", typeof(V2EX.Views.FavouritePage)),
-      new View("\uE0A5", "关于", typeof(V2EX.Views.AboutPage))
+      new View("\uE0A5", "关于", typeof(V2EX.Views.About.View))
     };
   }
 }

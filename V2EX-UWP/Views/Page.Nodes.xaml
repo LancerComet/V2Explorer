@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="V2EX.Views.NodesPage"
+    x:Class="V2EX.Views.Nodes.View"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:V2EX.Views"
@@ -8,6 +8,48 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Padding="0, 20, 0, 10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="20, 0" FontSize="30" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0">节点</TextBlock>
+                <StackPanel Margin="10, 0" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal">
+                    <FontIcon VerticalAlignment="Center" Glyph="&#xE11A;" FontFamily="Segoe MDL2 Assets"></FontIcon>
+                    <TextBox HorizontalAlignment="Right" Width="200" Margin="10, 0, 0, 0" VerticalAlignment="Center" PlaceholderText="搜索节点..."></TextBox>
+                </StackPanel>
+            </Grid>
+            
+            <StackPanel Background="#3f9443" Height="160" Margin="0, 20"></StackPanel>
+        </StackPanel>
+
+        <GridView Grid.Row="1" Name="NodeList" Padding="20" ItemsSource="{Binding nodeSrv.allNodes}" SelectionMode="None">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Button Width="190" Height="100" Margin="5, 0, 0, 5" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Width="6" Height="34" Margin="0, 0, 10, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#41b883"></StackPanel>
+                            <StackPanel Orientation="Vertical" Width="150">
+                                <TextBlock Text="{Binding title}" Margin="0, 0, 0, 5" FontSize="20" VerticalAlignment="Center"></TextBlock>
+                                <TextBlock Text="{Binding header}" FontSize="14" TextWrapping="Wrap" Foreground="#777"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
 
     </Grid>
 </Page>

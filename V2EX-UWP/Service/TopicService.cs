@@ -5,31 +5,38 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace V2EX.Service {
-  // 话题节点数据类型.
-  // 用于定义话题节点.
-  class TopicNode {
+  /// <summary>
+  /// 话题节点数据类型.
+  /// 用于定义话题帖预览列表中的话题帖子.
+  /// </summary>
+  class TopicPost {
     string name = "";
     string label = "";
 
-    TopicNode (string name = "", string label = "") {
+    TopicPost (string name = "", string label = "") {
       this.name = name;
       this.label = label;
     }
   }
 
-  // 主题数据类型.
-  // 用于定义话题帖预览列表.
-  class Topic {
+  /// <summary>
+  /// 主题数据类型.
+  /// 用于定义话题帖预览列表.
+  /// </summary>
+  class TopicList {
     
   }
-
-  // 话题服务类.
+  
+  /// <summary>
+  /// 话题页面服务.
+  /// </summary>
+  /// 
   public class TopicService {
     // 话题节点.
-    List<TopicNode> TopicNodes { get; set; }
+    List<TopicPost> topicNodes { get; set; }
 
     // 主题列表.
-    List<Topic> TopicList { get; set; }
+    List<TopicList> topicList { get; set; }
 
     // 获取话题节点.
     public void GetTopics () {

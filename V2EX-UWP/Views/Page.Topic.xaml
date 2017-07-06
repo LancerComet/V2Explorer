@@ -27,7 +27,7 @@
             <Pivot.ItemTemplate>
                 <DataTemplate>
                     <PivotItem Margin="0">
-                        <Grid Background="Red">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>

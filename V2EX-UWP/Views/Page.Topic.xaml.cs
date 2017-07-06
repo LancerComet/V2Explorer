@@ -27,14 +27,22 @@ namespace V2EX.Views {
     }
   }
 
-  public class ViewModel {
+  public class TopicViewModel {
     public List<Node> nodes {
       get {
         return new List<Node>() {
           new Node("all", "全部"),
           new Node("hot", "最热"),
           new Node("tech", "技术"),
-          new Node("creative", "创意")
+          new Node("creative", "创意"),
+          new Node("play", "好玩"),
+          new Node("windows", "Windows"),
+          new Node("apple", "Apple"),
+          new Node("jobs", "酷工作"),
+          new Node("deals", "交易"),
+          new Node("city", "城市"),
+          new Node("qna", "问与答"),
+          new Node("r2", "R2")
         };
       }
     }
@@ -43,7 +51,7 @@ namespace V2EX.Views {
   public sealed partial class TopicPage : Page {
     public TopicPage () {
       this.InitializeComponent();
-      DataContext = new ViewModel();
+      DataContext = new TopicViewModel();
     }
 
     public string pageLabel {

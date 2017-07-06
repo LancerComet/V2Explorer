@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace V2EX.Service {
   public class LoginService {
-    public bool isLogin { get; set; }
+    public static bool isLogin { get; set; }
 
-    public void login () {
+    public static void login () {
 
     }
 
-    public void logout () {
+    public static void logout () {
 
     }
   }
