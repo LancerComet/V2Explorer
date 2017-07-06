@@ -5,7 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:V2EX"
+    xmlns:srv="using:V2EX.Service"
+    xmlns:converter="using:V2EX.Converter"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <srv:LoginService x:Key="loginSrv" isLogin="False"></srv:LoginService>
+        <converter:TrueToVisibility x:Key="trueToVisible"></converter:TrueToVisibility>
+        <converter:FalseToVisibility x:Key="falseToVisible"></converter:FalseToVisibility>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationForegroundThemeBrush}">
         <SplitView
@@ -36,14 +44,23 @@
                         <Button Name="HamburgerButton" Content="&#xE700;" Click="toggleSplitMenu" Style="{StaticResource .hamburger-menu}"></Button>
                     </StackPanel>
 
-                    <!-- Avatar -->
-                    <StackPanel Grid.Row="1">
+                    <StackPanel>
+                        <TextBlock Text="{Binding isLogin, Source={StaticResource loginSrv}}"></TextBlock>
+                    </StackPanel>
+
+                    <!-- Avatar: Guest -->
+                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Source={StaticResource loginSrv}, Converter={StaticResource falseToVisible}}">
                         <Button BorderThickness="0" Padding="0" Background="Transparent">
                             <StackPanel Orientation="Horizontal" Style="{StaticResource .hamburger-avatar}">
                                 <StackPanel Style="{StaticResource .hamburger-avatar-img}"></StackPanel>
                                 <TextBlock Style="{StaticResource .hamburger-avatar-username}">请登陆</TextBlock>
                             </StackPanel>
                         </Button>
+                    </StackPanel>
+                    
+                    <!-- Avatar: User -->
+                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Source={StaticResource loginSrv}, Converter={StaticResource trueToVisible}}">
+                        
                     </StackPanel>
 
                     <!-- Views Menu -->

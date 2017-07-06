@@ -5,6 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace V2EX.Service {
-  class LoginService {
+  public class LoginService {
+    public bool isLogin { get; set; }
+
+    public void login () {
+
+    }
+
+    public void logout () {
+
+    }
   }
 }
