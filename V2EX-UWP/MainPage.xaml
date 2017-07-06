@@ -11,8 +11,8 @@
 
     <Page.Resources>
         <srv:LoginService x:Key="loginSrv" isLogin="False"></srv:LoginService>
-        <converter:TrueToVisibility x:Key="trueToVisible"></converter:TrueToVisibility>
-        <converter:FalseToVisibility x:Key="falseToVisible"></converter:FalseToVisibility>
+        <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
+        <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationForegroundThemeBrush}">
@@ -42,10 +42,6 @@
                     <!-- Hamburg Menu -->
                     <StackPanel Grid.Row="0">
                         <Button Name="HamburgerButton" Content="&#xE700;" Click="toggleSplitMenu" Style="{StaticResource .hamburger-menu}"></Button>
-                    </StackPanel>
-
-                    <StackPanel>
-                        <TextBlock Text="{Binding isLogin, Source={StaticResource loginSrv}}"></TextBlock>
                     </StackPanel>
 
                     <!-- Avatar: Guest -->
