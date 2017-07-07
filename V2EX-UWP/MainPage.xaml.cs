@@ -73,7 +73,6 @@ namespace V2EX {
         AppCanvas.CanGoBack
           ? AppViewBackButtonVisibility.Visible
           : AppViewBackButtonVisibility.Collapsed;
-
     }
 
     /// <summary>

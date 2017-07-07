@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Windows.Web.Http;
+using V2EX.Service.Http;
 
 namespace V2EX.Service.Topic {
   public class Member {
@@ -48,13 +47,13 @@ namespace V2EX.Service.Topic {
   /// </summary>
   /// 
   public class Service {
-    public delegate void RequestResolve(List<Topic> topicList = null);
-    public delegate void RequestReject(Exception error = null);
+    public delegate void RequestResolve (List<Topic> topicList = null);
+    public delegate void RequestReject (Exception error = null);
 
     /// <summary>
-    /// 主题列表.
+    /// HTTP 服务.
     /// </summary>
-    List<Topic> topicList { get; set; }
+    private HttpRequest httpRequest { get; set; }
 
     /// <summary>
     /// 获取特定节点下话题列表.
@@ -62,7 +61,7 @@ namespace V2EX.Service.Topic {
     /// <param name="topicID"></param>
     /// <param name="resolve"></param>
     /// <param name="reject"></param>
-    public async void getTopics (int topicID = 0, RequestResolve resolve = null, RequestReject reject = null) {
+    public void getTopics (int topicID = 0, RequestResolve resolve = null, RequestReject reject = null) {
       try {
         // TODO; Request data.
         if (resolve != null) {
@@ -74,28 +73,18 @@ namespace V2EX.Service.Topic {
         }
       }
     }
-    
+
     /// <summary>
     /// 获取最新话题列表.
     /// </summary>
     /// <param name="resolve"></param>
     /// <param name="reject"></param>
-    public async void getLatestTopics (RequestResolve resolve = null, RequestReject reject = null) {
-      HttpClient ajax = new HttpClient();
-      try {
-        HttpResponseMessage res = await ajax.GetAsync(new Uri("https://www.v2ex.com/api/topics/latest.json"));
-        if (res != null && res.StatusCode == HttpStatusCode.Ok) {
-          var result = JsonConvert.DeserializeObject<List<Topic>>(res.Content.ToString());
-          resolve?.Invoke(result);
-        } else {
-          throw new Exception("Failed to request topic data.");
-        }
-      } catch (Exception error) {
-        reject?.Invoke(error);
-      }
+    public void getLatestTopics (RequestResolve resolve = null, RequestReject reject = null) {
+      this.httpRequest.get<Topic>("https://www.v2ex.com/api/topics/latest.json", resolve, reject);
     }
 
     Service () {
+      this.httpRequest = new HttpRequest();
     }
   }
 }

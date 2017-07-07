@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.Web.Http;
 using Newtonsoft.Json;
+using V2EX.Service.Http;
 
 namespace V2EX.Service.Node {
   /// <summary>
@@ -42,24 +43,30 @@ namespace V2EX.Service.Node {
     /// 请求回调委托定义.
     /// </summary>
     public delegate void RequestCallback();
+    private delegate void Resolve(List<Node> list);
+    private delegate void Reject(Exception error);
+
+    /// <summary>
+    /// Http 服务.
+    /// </summary>
+    private HttpRequest httpRequest { get; set; }
 
     /// <summary>
     /// 获取所有节点.
     /// </summary>
-    /// 
-    public async void getAllNodes(RequestCallback resolve = null, RequestCallback reject = null) {
-      HttpClient client = new HttpClient();
-      try {
-        HttpResponseMessage res = await client.GetAsync(new Uri("https://www.v2ex.com/api/nodes/all.json"));
-        if (res != null && res.StatusCode == HttpStatusCode.Ok) {
-          var result = JsonConvert.DeserializeObject<List<Node>>(res.Content.ToString());  // 使用 JSON.NET 将 JSON 字符串转为 List<Node>.
-          this.allNodes = result;
-          resolve?.Invoke();
-        }
-      } catch {
-        // TODO: 错误提示.
+    public void getAllNodes(RequestCallback resolve = null, RequestCallback reject = null) {
+      // resolve 函数.
+      Resolve _resolve = new Resolve((List<Node> result) => {
+        this.allNodes = result;
+        resolve?.Invoke();
+      });
+
+      // reject 函数.
+      Reject _reject = new Reject((Exception error) => {
         reject?.Invoke();
-      }
+      });
+
+      httpRequest.get<Node>("https://www.v2ex.com/api/nodes/all.json", _resolve, _reject);
     }
 
     /// <summary>
@@ -68,6 +75,10 @@ namespace V2EX.Service.Node {
     public event PropertyChangedEventHandler PropertyChanged;
     protected void notify (string propertyName) {
       this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public Service () {
+      this.httpRequest = new HttpRequest();
     }
   }
 }

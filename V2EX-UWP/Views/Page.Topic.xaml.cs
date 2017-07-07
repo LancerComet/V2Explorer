@@ -56,7 +56,7 @@ namespace V2EX.Views.Topic {
 
     public string pageLabel {
       get {
-        return Service.Config.views[0].label;
+        return Service.View.Config.views[0].label;
       }
     }
   }
