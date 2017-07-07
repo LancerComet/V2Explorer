@@ -32,4 +32,17 @@ namespace V2EX.Converter {
       return (Visibility)value != Visibility.Visible;
     }
   }
+
+  /// <summary>
+  /// String => Uri
+  /// </summary>
+  public class StringToUri : IValueConverter {
+    public object Convert(object value, Type targetType, object parameter, string language) {
+      return new Uri((string)value, UriKind.Absolute);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) {
+      return "";
+    }
+  }
 }

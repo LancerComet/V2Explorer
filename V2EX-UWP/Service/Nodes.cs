@@ -24,27 +24,12 @@ namespace V2EX.Service.Node {
   /// <summary>
   /// 节点服务.
   /// </summary>
-  public class Service : INotifyPropertyChanged {
-    /// <summary>
-    /// 所有节点数据.
-    /// </summary>
-    private List<Node> _allNodes;
-    public List<Node> allNodes {
-      get {
-        return this._allNodes;
-      }
-      set {
-        this._allNodes = value;
-        this.notify("allNodes");
-      }
-    }
-
+  public class Service {
     /// <summary>
     /// 请求回调委托定义.
     /// </summary>
-    public delegate void RequestCallback();
-    private delegate void Resolve(List<Node> list);
-    private delegate void Reject(Exception error);
+    public delegate void Resolve(List<Node> list);
+    public delegate void Reject(Exception error);
 
     /// <summary>
     /// Http 服务.
@@ -54,19 +39,8 @@ namespace V2EX.Service.Node {
     /// <summary>
     /// 获取所有节点.
     /// </summary>
-    public void getAllNodes(RequestCallback resolve = null, RequestCallback reject = null) {
-      // resolve 函数.
-      Resolve _resolve = new Resolve((List<Node> result) => {
-        this.allNodes = result;
-        resolve?.Invoke();
-      });
-
-      // reject 函数.
-      Reject _reject = new Reject((Exception error) => {
-        reject?.Invoke();
-      });
-
-      httpRequest.get<Node>("https://www.v2ex.com/api/nodes/all.json", _resolve, _reject);
+    public void getAllNodes (Resolve resolve = null, Reject reject = null) {
+      httpRequest.get<Node>("https://www.v2ex.com/api/nodes/all.json", resolve, reject);
     }
 
     /// <summary>

@@ -28,10 +28,7 @@ namespace V2EX.Service.View {
     // 用于通知 XAML 进行数据更新.
     public event PropertyChangedEventHandler PropertyChanged;
     protected void notify (string propertyName) {
-      PropertyChangedEventHandler handler = PropertyChanged;
-      if (handler != null) {
-        handler(this, new PropertyChangedEventArgs(propertyName));
-      }
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     public View (string icon = "", string label = "", Type page = null, bool isSelected = false) {

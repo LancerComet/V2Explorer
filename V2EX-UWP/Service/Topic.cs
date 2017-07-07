@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using V2EX.Service.Http;
 
 namespace V2EX.Service.Topic {
@@ -58,10 +59,10 @@ namespace V2EX.Service.Topic {
     /// <summary>
     /// 获取特定节点下话题列表.
     /// </summary>
-    /// <param name="topicID"></param>
+    /// <param name="topicName"></param>
     /// <param name="resolve"></param>
     /// <param name="reject"></param>
-    public void getTopics (int topicID = 0, RequestResolve resolve = null, RequestReject reject = null) {
+    public void getTopics (string topicName, RequestResolve resolve = null, RequestReject reject = null) {
       try {
         // TODO; Request data.
         if (resolve != null) {
@@ -75,15 +76,52 @@ namespace V2EX.Service.Topic {
     }
 
     /// <summary>
+    /// 头像地址过滤器.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public List<Topic> avatarFilter (List<Topic> list) {
+      return list.Select(item => {
+        item.member.avatar_mini = "https:" + item.member.avatar_mini;
+        item.member.avatar_normal = "https:" + item.member.avatar_normal;
+        item.member.avatar_large = "https:" + item.member.avatar_mini;
+        return item;
+      }).ToList();
+    }
+
+    /// <summary>
     /// 获取最新话题列表.
     /// </summary>
     /// <param name="resolve"></param>
     /// <param name="reject"></param>
     public void getLatestTopics (RequestResolve resolve = null, RequestReject reject = null) {
-      this.httpRequest.get<Topic>("https://www.v2ex.com/api/topics/latest.json", resolve, reject);
+      /// 数据过滤器.
+      /// 将 Resolve 传入的数据进行必要过滤.
+      var dataFilter = new RequestResolve((List<Topic> list) => {
+        list = this.avatarFilter(list);
+        resolve?.Invoke(list);
+      });
+
+      this.httpRequest.get<Topic>("https://www.v2ex.com/api/topics/latest.json", dataFilter, reject);
     }
 
-    Service () {
+    /// <summary>
+    /// 获取热门话题列表.
+    /// </summary>
+    /// <param name="resolve"></param>
+    /// <param name="reject"></param>
+    public void getHotTopics (RequestResolve resolve = null, RequestReject reject = null) {
+      /// 数据过滤器.
+      /// 将 Resolve 传入的数据进行必要过滤.
+      var dataFilter = new RequestResolve((List<Topic> list) => {
+        list = this.avatarFilter(list);
+        resolve?.Invoke(list);
+      });
+
+      this.httpRequest.get<Topic>("https://www.v2ex.com/api/topics/hot.json", dataFilter, reject);
+    }
+
+    public Service () {
       this.httpRequest = new HttpRequest();
     }
   }

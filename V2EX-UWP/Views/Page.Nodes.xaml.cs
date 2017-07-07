@@ -1,40 +1,60 @@
 ﻿using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using System.ComponentModel;
-
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+using System.Collections.Generic;
 
 namespace V2EX.Views.Nodes {
   /// <summary>
   /// 节点页面.
   /// </summary>
   public sealed partial class View : Page {
+    private ViewModel vm { get; set; }
+    private Service.Node.Service nodeSrv { get; set; }
+
     private void initVM () {
-      DataContext = new NodesVM();
+      var vm = new ViewModel();
+      this.vm = vm;
+      DataContext = vm;
+    }
+
+    private void initSrv () {
+      var nodeSrv = new Service.Node.Service();
+      this.nodeSrv = nodeSrv;
+    }
+
+    private void getAllNodesResolve(List<Service.Node.Node> nodesList) {
+      this.vm.loading = false;
+      this.vm.nodesList = nodesList;
+    }
+
+    private void initRequest () {
+      this.nodeSrv.getAllNodes(getAllNodesResolve);
     }
 
     public View() {
-      NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;  // 开启页面缓存模式.
+      NavigationCacheMode = NavigationCacheMode.Enabled;  // 开启页面缓存模式.
       this.InitializeComponent();
       this.initVM();
+      this.initSrv();
+      this.initRequest();
     }
   }
 
   /// <summary>
   /// 视图对象.
   /// </summary>
-  public class NodesVM : INotifyPropertyChanged {
+  public class ViewModel : INotifyPropertyChanged {
     /// <summary>
-    /// 节点服务实例.
+    /// 节点列表.
     /// </summary>
-    private Service.Node.Service _nodeSrv;
-    public Service.Node.Service nodeSrv {
-      get { 
-        return this._nodeSrv;
+    private List<Service.Node.Node> _nodesList;
+    public List<Service.Node.Node> nodesList {
+      get {
+        return this._nodesList;
       }
-
       set {
-        this._nodeSrv = value;
-        this.notify("nodeSrv");
+        this._nodesList = value;
+        this.notify("nodesList");
       }
     }
 
@@ -52,19 +72,7 @@ namespace V2EX.Views.Nodes {
       }
     }
 
-    /// <summary>
-    /// 获取数据执行成功回调函数.
-    /// </summary>
-    private void getAllNodesResolve () {
-      this.loading = false;
-    }
-
-    public NodesVM () {
-      var nodeSrv = new Service.Node.Service();
-      this.nodeSrv = nodeSrv;
-
-      nodeSrv.getAllNodes(this.getAllNodesResolve);
-    }
+    public ViewModel () {}
 
     /// <summary>
     /// 实现 Notify 接口通知视图更新.

@@ -42,7 +42,7 @@
         </StackPanel>
 
         <!-- Nodes List. -->
-        <GridView Grid.Row="1" Name="NodeList" Padding="20" ItemsSource="{Binding nodeSrv.allNodes}" SelectionMode="None">
+        <GridView Grid.Row="1" Name="NodeList" Padding="20" ItemsSource="{Binding nodesList}" SelectionMode="None">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Button Width="190" Height="120" Margin="5, 0, 0, 5" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Background="Transparent">
