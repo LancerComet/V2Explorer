@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace V2EX.Views {
+namespace V2EX.Views.Topic {
   public class Node {
     public string name { get; set; }
     public string label { get; set; }
@@ -48,15 +48,15 @@ namespace V2EX.Views {
     }
   }
 
-  public sealed partial class TopicPage : Page {
-    public TopicPage () {
+  public sealed partial class View : Page {
+    public View() {
       this.InitializeComponent();
       DataContext = new TopicViewModel();
     }
 
     public string pageLabel {
       get {
-        return Service.ViewConfig.views[0].label;
+        return Service.Config.views[0].label;
       }
     }
   }

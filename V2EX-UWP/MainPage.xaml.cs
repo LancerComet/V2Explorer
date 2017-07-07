@@ -9,22 +9,12 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-using V2EX.Service;
 using Windows.UI.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -34,15 +24,15 @@ namespace V2EX {
   /// 主页面视图对象.
   /// </summary>
   public class MainVM {
-    public List<View> views {
+    public List<Service.View.View> views {
       get {
-        return Service.ViewConfig.views;
+        return Service.View.Config.views;
       }
     }
 
     public bool isLogin {
       get {
-        return Service.LoginService.isLogin;
+        return Service.Login.Service.isLogin;
       }
     }
   }
@@ -91,7 +81,7 @@ namespace V2EX {
     /// </summary>
     /// 
     void navigateToMainPage () {
-      Service.ViewConfig.views.Any(view => {
+      Service.View.Config.views.Any(view => {
         if (view.isSelected) {
           AppCanvas.Navigate(view.page);
           return true;
@@ -119,7 +109,7 @@ namespace V2EX {
     private void navigateTo (object sender, RoutedEventArgs e) {
       var targetPage = ((Button)sender).Tag as Type;
       AppCanvas.Navigate(targetPage);
-      Service.ViewConfig.views.ForEach(item => {
+      Service.View.Config.views.ForEach(item => {
         item.isSelected = (item.page == targetPage);
       });
     }

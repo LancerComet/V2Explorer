@@ -26,8 +26,8 @@ namespace V2EX.Views.Nodes {
     /// <summary>
     /// 节点服务实例.
     /// </summary>
-    private Service.Node.NodesService _nodeSrv;
-    public Service.Node.NodesService nodeSrv {
+    private Service.Node.Service _nodeSrv;
+    public Service.Node.Service nodeSrv {
       get { 
         return this._nodeSrv;
       }
@@ -48,6 +48,7 @@ namespace V2EX.Views.Nodes {
       }
       set {
         this._loading = value;
+        this.notify("loading");
       }
     }
 
@@ -59,7 +60,7 @@ namespace V2EX.Views.Nodes {
     }
 
     public NodesVM () {
-      var nodeSrv = new Service.Node.NodesService();
+      var nodeSrv = new Service.Node.Service();
       this.nodeSrv = nodeSrv;
 
       nodeSrv.getAllNodes(this.getAllNodesResolve);

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Web.Http;
 using Newtonsoft.Json;
 
@@ -26,7 +23,7 @@ namespace V2EX.Service.Node {
   /// <summary>
   /// 节点服务.
   /// </summary>
-  public class NodesService : INotifyPropertyChanged {
+  public class Service : INotifyPropertyChanged {
     /// <summary>
     /// 所有节点数据.
     /// </summary>

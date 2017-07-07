@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace V2EX.Service {
+namespace V2EX.Service.View {
   // 导航项类型.
   public class View : INotifyPropertyChanged {
     public string icon { get; set; }
@@ -43,9 +43,9 @@ namespace V2EX.Service {
   }
 
   // 视图配置服务.
-  public class ViewConfig {
+  public class Config {
     public static List<View> views = new List<View> () {
-      new View("\uE7E7", "话题", typeof(V2EX.Views.TopicPage), true),
+      new View("\uE7E7", "话题", typeof(V2EX.Views.Topic.View), true),
       new View("\uECCB", "节点", typeof(V2EX.Views.Nodes.View)),
       new View("\uE725", "通知", typeof(V2EX.Views.Notify.View)),
       new View("\uE00A", "收藏", typeof(V2EX.Views.FavouritePage)),
