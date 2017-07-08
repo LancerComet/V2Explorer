@@ -62,7 +62,7 @@
                       </Grid.ColumnDefinitions>
                       
                       <!-- Avatar. -->
-                      <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0, 0, 10, 0">
+                      <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0, 0, 20, 0">
                         <Ellipse Width="50" Height="50">
                           <Ellipse.Fill>
                             <ImageBrush ImageSource="{Binding member.avatar_normal, Converter={StaticResource stringToUri}}"></ImageBrush>
