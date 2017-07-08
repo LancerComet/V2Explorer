@@ -37,7 +37,7 @@
 
       <Pivot.ItemTemplate>
         <DataTemplate>
-          <PivotItem Margin="20, 150, 20, 0" Padding="10" Background="#fff">
+          <PivotItem Margin="20, 150, 20, 0" Padding="10" Background="#fff" MaxWidth="1280">
             <ListView Grid.Row="0" ItemsSource="{Binding topicList}" SelectionMode="None">
               <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -50,9 +50,19 @@
 
               <ListView.ItemTemplate>
                 <DataTemplate>
-                  <ListViewItem Background="Transparent">
-                    <StackPanel Orientation="Horizontal" Padding="0, 10">
-                      <StackPanel VerticalAlignment="Center" Margin="0, 0, 10, 0">
+                  <ListViewItem Background="Transparent" Padding="0, 0, 10, 0">
+                    <Grid Padding="10, 15">
+                      <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                      </Grid.RowDefinitions>
+
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                      </Grid.ColumnDefinitions>
+                      
+                      <!-- Avatar. -->
+                      <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0, 0, 10, 0">
                         <Ellipse Width="50" Height="50">
                           <Ellipse.Fill>
                             <ImageBrush ImageSource="{Binding member.avatar_normal, Converter={StaticResource stringToUri}}"></ImageBrush>
@@ -60,16 +70,41 @@
                         </Ellipse>
                       </StackPanel>
 
-                      <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding title}" FontSize="16"></TextBlock>
-                        <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                      <!-- Text Info. -->
+                      <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+                        <TextBlock Text="{Binding title}" FontSize="16" TextWrapping="Wrap" HorizontalAlignment="Stretch"></TextBlock>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0" HorizontalAlignment="Stretch">
                           <StackPanel Padding="4" Margin="0, 0, 5, 0" Background="#f3faff" VerticalAlignment="Center" CornerRadius="5">
                             <TextBlock Text="{Binding node.title}" Foreground="#6eb4ff" FontSize="12"></TextBlock>
                           </StackPanel>
-                          <TextBlock Text="{Binding member.username}" FontSize="12" VerticalAlignment="Center" Foreground="#999"></TextBlock>
+
+                          <StackPanel Orientation="Horizontal" Margin="10, 0">
+                            <StackPanel.Resources>
+                              <Style TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="12"></Setter>
+                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                <Setter Property="Foreground" Value="#999"></Setter>
+                              </Style>
+                            </StackPanel.Resources>
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE2AF;"></TextBlock>
+                            <TextBlock Text="{Binding member.username}" Margin="5, 0"></TextBlock>
+                          </StackPanel>
+
+                          <StackPanel Orientation="Horizontal" Margin="5, 0, 0, 0">
+                            <StackPanel.Resources>
+                              <Style TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="12"></Setter>
+                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                <Setter Property="Foreground" Value="#999"></Setter>
+                              </Style>
+                            </StackPanel.Resources>
+                            <TextBlock Text="{Binding last_modified}"></TextBlock>
+                          </StackPanel>
                         </StackPanel>
+                        
                       </StackPanel>
-                    </StackPanel>
+                    </Grid>
                   </ListViewItem>
                 </DataTemplate>
               </ListView.ItemTemplate>
