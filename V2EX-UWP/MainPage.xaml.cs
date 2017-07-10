@@ -108,6 +108,16 @@ namespace V2EX {
     private void navigateTo (object sender, RoutedEventArgs e) {
       var targetPage = ((Button)sender).Tag as Type;
       AppCanvas.Navigate(targetPage);
+    }
+
+    /// <summary>
+    /// 导航完成后回调事件.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// 
+    private void onNavigated (object sender, NavigationEventArgs e) {
+      var targetPage = ((Frame)sender).CurrentSourcePageType;
       Service.View.Config.views.ForEach(item => {
         item.isSelected = (item.page == targetPage);
       });

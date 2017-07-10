@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
+/// <summary>
+/// 类型转换器.
+/// 提供程序中使用的类型转换函数.
+/// </summary>
+/// 
 namespace V2EX.Converter {
   /// <summary>
   /// True => Visible
@@ -41,6 +46,7 @@ namespace V2EX.Converter {
       return new Uri((string)value, UriKind.Absolute);
     }
 
+    // 并没有什么用.
     public object ConvertBack(object value, Type targetType, object parameter, string language) {
       return "";
     }

@@ -1,13 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 
+/// <summary>
+/// 程序视图服务.
+/// 提供视图相关的基础功能.
+/// </summary>
 namespace V2EX.Service.View {
-  // 导航项类型.
+  /// <summary>
+  /// 视图类.
+  /// 定义当个页面的视图数据类型.
+  /// </summary>
   public class View : INotifyPropertyChanged {
     public string icon { get; set; }
     public string label { get; set; }
@@ -39,7 +42,10 @@ namespace V2EX.Service.View {
     }
   }
 
-  // 视图配置服务.
+  /// <summary>
+  /// 视图配置静态访问类.
+  /// 提供程序视图定义列表.
+  /// </summary>
   public class Config {
     public static List<View> views = new List<View> () {
       new View("\uE7E7", "话题", typeof(V2EX.Views.Topic.View), true),

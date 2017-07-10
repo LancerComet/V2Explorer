@@ -109,7 +109,7 @@
             </SplitView.Pane>
 
             <SplitView.Content>
-                <Frame Name="AppCanvas"/>
+                <Frame Name="AppCanvas" Navigated="onNavigated"/>
             </SplitView.Content>
         </SplitView>
     </Grid>
