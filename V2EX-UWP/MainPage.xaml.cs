@@ -24,12 +24,18 @@ namespace V2EX {
   /// 主页面视图对象.
   /// </summary>
   public class MainVM {
+    /// <summary>
+    /// 视图列表.
+    /// </summary>
     public List<Service.View.View> views {
       get {
         return Service.View.Config.views;
       }
     }
 
+    /// <summary>
+    /// 登陆状态标识.
+    /// </summary>
     public bool isLogin {
       get {
         return Service.Login.Service.isLogin;
@@ -37,20 +43,15 @@ namespace V2EX {
     }
   }
 
-
+  /// <summary>
+  /// 主体视图类.
+  /// </summary>
   public partial class MainPage : Page {
-    public MainPage() {
-      this.InitializeComponent();
-      this.initBackButton();
-      this.navigateToMainPage();
-      DataContext = new MainVM();
-    }
-
     /// <summary>
     /// 初始化 BackButton 相关事件.
     /// </summary>
     /// 
-    void initBackButton () {
+    private void initBackButton () {
       // 注册导航回调.
       AppCanvas.Navigated += (object sender, NavigationEventArgs e) => {
         // 在每次导航时更新 backButton 可见性.
@@ -79,7 +80,7 @@ namespace V2EX {
     /// 导航到主页面. 
     /// </summary>
     /// 
-    void navigateToMainPage () {
+    private void navigateToMainPage () {
       Service.View.Config.views.Any(view => {
         if (view.isSelected) {
           AppCanvas.Navigate(view.page);
@@ -95,7 +96,7 @@ namespace V2EX {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// 
-    void toggleSplitMenu (object sender, RoutedEventArgs e) {
+    private void toggleSplitMenu (object sender, RoutedEventArgs e) {
       AppSplitView.IsPaneOpen = !AppSplitView.IsPaneOpen;
     }
 
@@ -105,9 +106,18 @@ namespace V2EX {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// 
-    private void navigateTo (object sender, RoutedEventArgs e) {
+    private void navigateToView (object sender, RoutedEventArgs e) {
       var targetPage = ((Button)sender).Tag as Type;
       AppCanvas.Navigate(targetPage);
+    }
+
+    /// <summary>
+    /// 导航至
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void navigateToLogin (object sender, RoutedEventArgs e) {
+      AppCanvas.Navigate(typeof(V2EX.Views.Login.View));
     }
 
     /// <summary>
@@ -121,6 +131,13 @@ namespace V2EX {
       Service.View.Config.views.ForEach(item => {
         item.isSelected = (item.page == targetPage);
       });
+    }
+
+    public MainPage() {
+      this.InitializeComponent();
+      this.initBackButton();
+      this.navigateToMainPage();
+      DataContext = new MainVM();
     }
   }
 }

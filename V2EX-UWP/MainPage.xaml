@@ -24,7 +24,7 @@
 
             <SplitView.Pane>
                 <!-- Menu Buttons -->
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -55,7 +55,7 @@
 
                     <!-- Avatar: Guest -->
                     <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Converter={StaticResource falseToVisible}}">
-                        <Button BorderThickness="0" Padding="0" Background="Transparent">
+                        <Button BorderThickness="0" Padding="0" Background="Transparent" Click="navigateToLogin">
                             <StackPanel Orientation="Horizontal" Style="{StaticResource .hamburger-avatar}">
                                 <StackPanel Style="{StaticResource .hamburger-avatar-img}"></StackPanel>
                                 <TextBlock Style="{StaticResource .hamburger-avatar-username}">请登陆</TextBlock>
@@ -80,7 +80,7 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Button Click="navigateTo" Tag="{Binding page}" Style="{StaticResource .view-menu}">
+                                <Button Click="navigateToView" Tag="{Binding page}" Style="{StaticResource .view-menu}">
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel Background="#3f9443" Width="5" Height="30" Margin="-8" HorizontalAlignment="Left" Visibility="{Binding isSelected}"></StackPanel>
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Margin="9, 0, 0, 0" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>
