@@ -32,16 +32,16 @@
 
           <StackPanel Orientation="Vertical" MaxWidth="400">
             <TextBlock Margin="10, 20, 0, 5" FontSize="12" HorizontalAlignment="Left" Foreground="#333">用户名</TextBlock>
-            <TextBox Name="Username" BorderBrush="Green" Foreground="#34495e"></TextBox>
+            <TextBox Name="Username" BorderBrush="Green" Foreground="#34495e" Text="{Binding username, Mode=TwoWay}"></TextBox>
           </StackPanel>
         
           <StackPanel Orientation="Vertical" MaxWidth="400">
             <TextBlock Margin="10, 10, 0, 5" FontSize="12" HorizontalAlignment="Left" Foreground="#333">密码</TextBlock>
-            <PasswordBox Name="Password" BorderBrush="Green" Foreground="#34495e"></PasswordBox>
+            <PasswordBox Name="Password" BorderBrush="Green" Foreground="#34495e" Password="{Binding password, Mode=TwoWay}"></PasswordBox>
           </StackPanel>
 
           <StackPanel Orientation="Vertical" MaxWidth="400">
-            <Button HorizontalAlignment="Center" Margin="20, 20, 20, 10" Background="Green" Foreground="#fff" BorderThickness="0" Padding="20, 10" FontSize="14">登陆</Button>
+            <Button Click="login" HorizontalAlignment="Center" Margin="20, 20, 20, 10" Background="Green" Foreground="#fff" BorderThickness="0" Padding="20, 10" FontSize="14">登陆</Button>
             <HyperlinkButton NavigateUri="https://www.v2ex.com/forgot" HorizontalAlignment="Center" Foreground="#708AA0">忘记密码</HyperlinkButton>
           </StackPanel>
         </StackPanel>

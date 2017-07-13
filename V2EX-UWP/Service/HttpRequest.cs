@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using Windows.Web.Http;
 using Newtonsoft.Json;
+using Windows.Data.Json;
+using Windows.Foundation;
+using Windows.Storage.Streams;
+using Windows.Web.Http.Headers;
 
 namespace V2EX.Service.Http {
    public class HttpRequest {
@@ -17,18 +21,7 @@ namespace V2EX.Service.Http {
     }
 
     /// <summary>
-    /// 发送 Post 请求.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="url"></param>
-    /// <param name="resolve"></param>
-    /// <param name="reject"></param>
-    public void post<T> (string url, Delegate resolve, Delegate reject) {
-      // TODO: ...
-    }
-
-    /// <summary>
-    /// 发送请求.
+    /// GET 请求发送函数.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="url"></param>

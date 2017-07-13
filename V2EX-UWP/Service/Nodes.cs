@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Windows.Web.Http;
-using Newtonsoft.Json;
 using V2EX.Service.Http;
 
 namespace V2EX.Service.Node {
