@@ -9,10 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid.Resources>
@@ -21,7 +18,7 @@
             </Style>
         </Grid.Resources>
 
-        <ListView>
+        <ListView Grid.Row="0">
             <ListView.Header>
                 <StackPanel>
                     <StackPanel Padding="20">
@@ -29,7 +26,7 @@
                         <TextBlock>一个奇怪的 V2EX UWP 客户端.</TextBlock>
                     </StackPanel>
 
-                    <StackPanel Padding="20" Grid.Row="1">
+                    <StackPanel Padding="20">
                         <TextBlock Padding="0, 0, 0, 12">「大人の階段昇る、君はまだシンデレラさ」</TextBlock>
                         <TextBlock>© 2017 LancerComet</TextBlock>
                         <TextBlock># Carry Your World #</TextBlock>
@@ -39,14 +36,15 @@
                         <TextBlock>使用的开源库：</TextBlock>
                         <StackPanel Padding="0, 5, 0, 0">
                             <TextBlock>JSON.NET</TextBlock>
+                            <TextBlock>HtmlAgilityPack</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </ListView.Header>
 
             <ListView.Footer>
-                <StackPanel Padding="20" Grid.Row="3">
-                    <TextBlock>This software is released udner MIT License.</TextBlock>
+                <StackPanel Padding="20">
+                    <TextBlock>This software is released under MIT License.</TextBlock>
                 </StackPanel>
             </ListView.Footer>
         </ListView>
