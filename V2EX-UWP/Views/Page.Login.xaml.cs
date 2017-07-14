@@ -4,6 +4,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace V2EX.Views.Login {
   public class ViewModel: INotifyPropertyChanged {
+    public bool loading { get; set; }
+
+    public bool isLogin {
+      get {
+        return Service.Login.Service.isLogin;
+      }
+      set {
+        this.notify("isLogin");
+      }
+    }
+
     /// <summary>
     /// 用户名.
     /// </summary>
@@ -35,32 +46,17 @@ namespace V2EX.Views.Login {
     }
 
     /// <summary>
-    /// 错误登陆提示控制标识.
+    /// 错误登陆类型.
     /// </summary>
-    private bool _wrongLoginHint;
-    public bool wrongLoginHint {
+    private string _loginErrorType;
+    public string loginErrorType {
       get {
-        return this._wrongLoginHint;
+        return this._loginErrorType;
       }
       
       set {
-        this._wrongLoginHint = value;
+        this._loginErrorType = value;
         this.notify("wrongPassHint");
-      }
-    }
-
-    /// <summary>
-    /// 登陆错误提示文字.
-    /// </summary>
-    private string _wrongLoginHintText;
-    public string wrongLoginHintText {
-      get {
-        return this._wrongLoginHintText;
-      }
-
-      set {
-        this._wrongLoginHintText = value;
-        this.notify("wrongLoginHintText");
       }
     }
 
@@ -71,7 +67,7 @@ namespace V2EX.Views.Login {
   }
 
   /// <summary>
-  /// 可用于自身或导航至 Frame 内部的空白页。
+  /// Page.
   /// </summary>
   public sealed partial class View : Page {
     private ViewModel vm { get; set; }
@@ -83,10 +79,14 @@ namespace V2EX.Views.Login {
       var username = this.vm.username;
       var password = this.vm.password;
 
+      this.vm.loading = true;
       Service.Login.Service.login(username, password, (bool isLogin) => {
-
-      }, () => {
-
+        this.vm.loginErrorType = null;
+        this.vm.isLogin = isLogin;  // 只是通知数据更改，从 Login 服务中的静态成员重新获取数据.
+        this.vm.loading = false;
+      }, (string errorType) => {
+        this.vm.loginErrorType = errorType;
+        this.vm.loading = false;
       });
     }
 

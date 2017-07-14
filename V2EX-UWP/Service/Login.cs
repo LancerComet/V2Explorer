@@ -8,7 +8,7 @@ using System.Net.Http;
 namespace V2EX.Service.Login {
   public class Service {
     public delegate void Resolve(bool isLogin);
-    public delegate void Reject();
+    public delegate void Reject(string type);
 
     /// <summary>
     /// 是否处于登陆状态.
@@ -22,8 +22,10 @@ namespace V2EX.Service.Login {
 
     /// <summary>
     /// 登陆方法.
+    /// V2EX 没有提供 API 登陆接口，需要解析网页获取 input 中的动态字段后提交登陆.
     /// </summary>
     public static async void login (string username, string password, Resolve resolve = null, Reject reject = null) {
+      // 解析网页获取必要信息后发送登陆请求.
       HtmlWeb web = new HtmlWeb();
       var loginPage = await web.LoadFromWebAsync("https://www.v2ex.com/signin");
 
@@ -101,6 +103,7 @@ namespace V2EX.Service.Login {
         client.DefaultRequestHeaders.Remove("UserAgent");
         client.DefaultRequestHeaders.Add("UserAgent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36 V2Explorer/0.1.0 (Windows UWP)");
 
+        // 发送请求.
         HttpResponseMessage res = await client.PostAsync(url, postData);
 
         // 登陆成功.
@@ -120,11 +123,11 @@ namespace V2EX.Service.Login {
           isLogin = true;
           resolve?.Invoke(true);
         } else {
-          // 其他情况均为失败.  
-          reject?.Invoke();
+          // 其他情况均为失败.
+          reject?.Invoke("logic");
         }
       } catch (Exception error) {
-        reject?.Invoke();
+        reject?.Invoke("error");
 
       }
     }
