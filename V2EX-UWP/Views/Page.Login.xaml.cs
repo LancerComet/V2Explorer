@@ -4,7 +4,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace V2EX.Views.Login {
   public class ViewModel: INotifyPropertyChanged {
-    public bool loading { get; set; }
+    private bool _loading;
+    public bool loading {
+      get {
+        return _loading;
+      }
+
+      set {
+        _loading = value;
+        this.notify("loading");
+      }
+    }
 
     public bool isLogin {
       get {

@@ -4,8 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:V2EX.Converter"
     mc:Ignorable="d"
   >
+
+    <Page.Resources>
+      <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
+      <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"></RowDefinition>
@@ -17,6 +24,7 @@
       </Grid.ColumnDefinitions>
 
       <StackPanel Name="HeaderImage" Grid.Row="0" Grid.Column="0" Background="Green" Height="200"></StackPanel>
+
       <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Margin="20">
         <StackPanel>
           <StackPanel.Resources>
@@ -46,5 +54,13 @@
           </StackPanel>
         </StackPanel>
       </StackPanel>
+
+
+      <ScrollViewer Grid.Row="1" Grid.Column="0" Background="#fff" Opacity="0.7" Visibility="{Binding loading, Converter={StaticResource trueToVisible}}">
+        <StackPanel VerticalAlignment="Center">
+          <ProgressBar IsIndeterminate="True"></ProgressBar>
+          <TextBlock HorizontalAlignment="Center">毁灭地球中...</TextBlock>
+        </StackPanel>
+      </ScrollViewer>
     </Grid>
 </Page>

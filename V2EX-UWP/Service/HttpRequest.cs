@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.Web.Http;
+using System.Net.Http;
+using System.Net;
 using Newtonsoft.Json;
-using Windows.Data.Json;
-using Windows.Foundation;
-using Windows.Storage.Streams;
-using Windows.Web.Http.Headers;
 
 namespace V2EX.Service.Http {
-   public class HttpRequest {
+  public class HttpRequest {
     /// <summary>
     /// 发送 Get 请求.
     /// </summary>
@@ -28,11 +25,12 @@ namespace V2EX.Service.Http {
     /// <param name="resolve"></param>
     /// <param name="reject"></param>
     private async void doGetRequest<T> (string url, Delegate resolve = null, Delegate reject = null) {
-      HttpClient ajax = new HttpClient();
+      HttpClientHandler handler = new HttpClientHandler();
+      HttpClient ajax = new HttpClient(handler);
       try {
         HttpResponseMessage res = await ajax.GetAsync(new Uri(url));
-        if (res != null && res.StatusCode == HttpStatusCode.Ok) {
-          List<T> result = JsonConvert.DeserializeObject<List<T>>(res.Content.ToString());
+        if (res != null && res.StatusCode == HttpStatusCode.OK) {
+          List<T> result = JsonConvert.DeserializeObject<List<T>>(await res.Content.ReadAsStringAsync());
           resolve?.DynamicInvoke(result);
         } else {
           throw new Exception("Failed to request " + url);
