@@ -20,6 +20,15 @@ namespace V2EX.Service.Node {
   }
 
   /// <summary>
+  /// 简化节点类型.
+  /// </summary>
+  public class NodeSimple {
+    public string name { get; set; }
+    public string label { get; set; }
+    public NodeSimple () { }
+  }
+
+  /// <summary>
   /// 节点服务.
   /// </summary>
   public class Service {

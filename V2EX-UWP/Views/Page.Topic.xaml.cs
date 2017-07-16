@@ -1,29 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace V2EX.Views.Topic {
   /// <summary>
   /// 节点数据类型.
-  /// 此 Node 类为 Service.Node 中的 Node 类的简化版，并添加了 Topic 页面使用的属性字段.
   /// </summary>
-  public class Node : INotifyPropertyChanged {
-    public string name { get; set; }
-    public string label { get; set; }
-
+  public class Node : Service.Node.NodeSimple, INotifyPropertyChanged {
     private List<Service.Topic.Topic> _topicList;
     public List<Service.Topic.Topic> topicList {
       get {
@@ -79,7 +63,11 @@ namespace V2EX.Views.Topic {
     /// <summary>
     /// Topic 服务实例.
     /// </summary>
-    private Service.Topic.Service topicSrv { get; set; }
+    private Service.Topic.Service topicSrv {
+      get {
+        return new Service.Topic.Service();
+      }
+    }
 
     /// <summary>
     /// 获取特定节点下的话题.
@@ -92,7 +80,7 @@ namespace V2EX.Views.Topic {
     /// 获取最新话题.
     /// </summary>
     public void getLatestTopics () {
-      this.topicSrv.getLatestTopics(topicList => {
+      this.topicSrv.getTopics("all", topicList => {
         var allNodeItem = this.vm.nodes.Find(item => item.name == "all");
         allNodeItem.topicList = topicList;
       }, error => {
@@ -104,9 +92,9 @@ namespace V2EX.Views.Topic {
     /// 获取最热话题.
     /// </summary>
     public void getHotTopics () {
-      this.topicSrv.getHotTopics(topicList => {
-        var hotNodeItem = this.vm.nodes.Find(item => item.name == "hot");
-        hotNodeItem.topicList = topicList;
+      this.topicSrv.getTopics("hot", topicList => {
+        var allNodeItem = this.vm.nodes.Find(item => item.name == "all");
+        allNodeItem.topicList = topicList;
       }, error => {
         // ...
       });
@@ -136,9 +124,6 @@ namespace V2EX.Views.Topic {
       var vm = new ViewModel(presetNodes);
       this.DataContext = vm;
       this.vm = vm;
-
-      // 创建 topicService.
-      this.topicSrv = new Service.Topic.Service();
 
       // 获取初始数据.
       this.getLatestTopics();

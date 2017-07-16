@@ -9,17 +9,17 @@ namespace V2EX.Views.Nodes {
   /// </summary>
   public sealed partial class View : Page {
     private ViewModel vm { get; set; }
-    private Service.Node.Service nodeSrv { get; set; }
+
+    private Service.Node.Service nodeSrv {
+      get {
+        return new Service.Node.Service();
+      }
+    }
 
     private void initVM () {
       var vm = new ViewModel();
       this.vm = vm;
       DataContext = vm;
-    }
-
-    private void initSrv () {
-      var nodeSrv = new Service.Node.Service();
-      this.nodeSrv = nodeSrv;
     }
 
     private void getAllNodesResolve(List<Service.Node.Node> nodesList) {
@@ -35,7 +35,6 @@ namespace V2EX.Views.Nodes {
       NavigationCacheMode = NavigationCacheMode.Enabled;  // 开启页面缓存模式.
       this.InitializeComponent();
       this.initVM();
-      this.initSrv();
       this.initRequest();
     }
   }
