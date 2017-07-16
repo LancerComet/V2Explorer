@@ -35,8 +35,9 @@
                     <StackPanel Padding="20">
                         <TextBlock>使用的开源库：</TextBlock>
                         <StackPanel Padding="0, 5, 0, 0">
-                            <TextBlock>JSON.NET</TextBlock>
                             <TextBlock>HtmlAgilityPack</TextBlock>
+                            <TextBlock>JSON.NET</TextBlock>
+                            <TextBlock>Microsoft UWP Community Toolkit</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
