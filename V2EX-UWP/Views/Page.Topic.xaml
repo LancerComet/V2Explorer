@@ -23,10 +23,10 @@
 
     <!-- Title. -->
     <StackPanel Grid.Row="0" Padding="20, 20, 20, 10">
-      <TextBlock FontSize="30" Text="{Binding PAGE_LABEL}"></TextBlock>
+      <TextBlock FontSize="30" Text="话题"></TextBlock>
     </StackPanel>
 
-    <Pivot x:Name="rootPivot" Grid.Row="1" ItemsSource="{Binding nodes}">
+    <Pivot x:Name="rootPivot" Grid.Row="1" ItemsSource="{Binding nodes}" Tag="{Binding name}" SelectionChanged="onSelectionChanged">
       <Pivot.Resources>
         <Style TargetType="PivotItem">
           <Setter Property="Margin" Value="0"></Setter>

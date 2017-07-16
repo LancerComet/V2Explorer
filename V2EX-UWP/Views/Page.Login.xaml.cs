@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using V2EX.Service.EventBus;
 
 namespace V2EX.Views.Login {
   public class ViewModel: INotifyPropertyChanged {
@@ -92,9 +94,12 @@ namespace V2EX.Views.Login {
       this.vm.loading = true;
       Service.Login.Service.login(username, password, (bool isLogin) => {
         this.vm.loginErrorType = null;
-        this.vm.isLogin = isLogin;  // 只是通知数据更改，从 Login 服务中的静态成员重新获取数据.
+        this.vm.isLogin = isLogin;  // 只是通知数据更改，从 Login 服务中的静态成员重新获取数据. 不知道有没有效果.
         this.vm.loading = false;
-      }, (string errorType) => {
+
+        // 登陆成功后后退.
+        EventBus.emit("AppCanvas:GoBack", null);
+      }, (string errorType, Exception error) => {
         this.vm.loginErrorType = errorType;
         this.vm.loading = false;
       });

@@ -14,10 +14,9 @@ using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
 using Windows.UI.Core;
 
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
+using V2EX.Service.EventBus;
 
 namespace V2EX {
   /// <summary>
@@ -133,10 +132,27 @@ namespace V2EX {
       });
     }
 
+    /// <summary>
+    /// 后退方法.
+    /// </summary>
+    private void goBack (object value) {
+      if (AppCanvas.CanGoBack) {
+        AppCanvas.GoBack();
+      }
+    }
+
+    /// <summary>
+    /// 注册事件.
+    /// </summary>
+    private void registerEvents () {
+      EventBus.on("AppCanvas:GoBack", this.goBack);
+    }
+
     public MainPage() {
       this.InitializeComponent();
       this.initBackButton();
       this.navigateToMainPage();
+      this.registerEvents();
       DataContext = new MainVM();
     }
   }

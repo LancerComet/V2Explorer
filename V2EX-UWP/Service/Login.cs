@@ -8,7 +8,7 @@ using System.Net.Http;
 namespace V2EX.Service.Login {
   public class Service {
     public delegate void Resolve(bool isLogin);
-    public delegate void Reject(string type);
+    public delegate void Reject(string type, Exception error);
 
     /// <summary>
     /// 是否处于登陆状态.
@@ -124,10 +124,10 @@ namespace V2EX.Service.Login {
           resolve?.Invoke(true);
         } else {
           // 其他情况均为失败.
-          reject?.Invoke("logic");
+          reject?.Invoke("logic", new Exception("登陆失败"));
         }
       } catch (Exception error) {
-        reject?.Invoke("error");
+        reject?.Invoke("error", error);
 
       }
     }

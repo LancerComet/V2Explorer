@@ -98,6 +98,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Service\EventBus.cs" />
     <Compile Include="Service\HttpRequest.cs" />
     <Compile Include="Service\Nodes.cs" />
     <Compile Include="Utils\Converter.cs" />

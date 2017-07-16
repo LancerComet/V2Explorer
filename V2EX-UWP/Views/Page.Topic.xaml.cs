@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -34,31 +35,61 @@ namespace V2EX.Views.Topic {
   /// <summary>
   /// 视图对象.
   /// </summary>
-  public class ViewModel {
+  public class ViewModel: INotifyPropertyChanged {
     /// <summary>
-    /// 节点列表.
+    /// 预设节点列表.
     /// </summary>
-    public List<Node> nodes { get; set; }
-
-    /// <summary>
-    /// 页面标题.
-    /// </summary>
-    public string PAGE_LABEL {
+    public List<Node> nodes {
       get {
-        return Service.View.Config.views[0].label;
+        return new List<Node>() {
+          new Node("all", "全部"),
+          new Node("hot", "最热"),
+          new Node("tech", "技术"),
+          new Node("creative", "创意"),
+          new Node("play", "好玩"),
+          new Node("windows", "Windows"),
+          new Node("apple", "Apple"),
+          new Node("jobs", "酷工作"),
+          new Node("deals", "交易"),
+          new Node("city", "城市"),
+          new Node("qna", "问与答"),
+          new Node("r2", "R2")
+        };
       }
     }
 
-    public ViewModel (List<Node> nodes) {
-      this.nodes = nodes;
+    /// <summary>
+    /// 载入状态控制标识.
+    /// </summary>
+    private bool _loading;
+    public bool loading {
+      get {
+        return this._loading;
+      }
+      set {
+        this._loading = value;
+        this.notify("loading");
+      }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void notify(string propertyName) {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 
+  /// <summary>
+  /// 话题页面.
+  /// </summary>
   public sealed partial class View : Page {
     /// <summary>
     /// 视图对象.
     /// </summary>
-    private ViewModel vm { get; set; }
+    private ViewModel vm {
+      get {
+        return new ViewModel();
+      }
+    }
 
     /// <summary>
     /// Topic 服务实例.
@@ -73,66 +104,38 @@ namespace V2EX.Views.Topic {
     /// 获取特定节点下的话题.
     /// </summary>
     /// <param name="nodeName"></param>
-    public void getTopicsOfNode (string nodeName) {
-    }
-
-    /// <summary>
-    /// 获取最新话题.
-    /// </summary>
-    public void getLatestTopics () {
-      this.topicSrv.getTopics("all", topicList => {
-        var allNodeItem = this.vm.nodes.Find(item => item.name == "all");
-        allNodeItem.topicList = topicList;
+    /// <param name="targetNode"></param>
+    public void getTopics (string nodeName, Node targetNode) {
+      this.vm.loading = true;
+      this.topicSrv.getTopics(nodeName, topicList => {
+        targetNode.topicList = topicList;
+        this.vm.loading = false;
       }, error => {
         // ...
+        this.vm.loading = false;
       });
-    }
-
-    /// <summary>
-    /// 获取最热话题.
-    /// </summary>
-    public void getHotTopics () {
-      this.topicSrv.getTopics("hot", topicList => {
-        var allNodeItem = this.vm.nodes.Find(item => item.name == "all");
-        allNodeItem.topicList = topicList;
-      }, error => {
-        // ...
-      });
-    }
-
-    /// <summary>
-    /// 页面初始化逻辑.
-    /// </summary>
-    private void init() {
-      // 创建预设节点数据.
-      var presetNodes = new List<Node>() {
-        new Node("all", "全部"),
-        new Node("hot", "最热"),
-        new Node("tech", "技术"),
-        new Node("creative", "创意"),
-        new Node("play", "好玩"),
-        new Node("windows", "Windows"),
-        new Node("apple", "Apple"),
-        new Node("jobs", "酷工作"),
-        new Node("deals", "交易"),
-        new Node("city", "城市"),
-        new Node("qna", "问与答"),
-        new Node("r2", "R2")
-      };
-
-      // 初始化 VM.
-      var vm = new ViewModel(presetNodes);
-      this.DataContext = vm;
-      this.vm = vm;
-
-      // 获取初始数据.
-      this.getLatestTopics();
     }
 
     public View() {
       NavigationCacheMode = NavigationCacheMode.Enabled;
       this.InitializeComponent();
-      this.init();
+      
+      // 设置 DataContext.
+      this.DataContext = this.vm;
+
+      // 获取初始数据.
+      this.getTopics("all", this.vm.nodes.Find(item => item.name == "all"));
+    }
+
+    /// <summary>
+    /// 导航触发事件.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void onSelectionChanged(object sender, SelectionChangedEventArgs e) {
+      var selectedNode = (Node)((Pivot)sender).SelectedItem;
+      var nodeName = selectedNode.name;
+      this.getTopics(nodeName, selectedNode);
     }
   }
 }
