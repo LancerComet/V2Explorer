@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="Service\EventBus.cs" />
     <Compile Include="Service\HttpRequest.cs" />
+    <Compile Include="Service\Member.cs" />
     <Compile Include="Service\Nodes.cs" />
     <Compile Include="Utils\Converter.cs" />
     <Compile Include="Service\Login.cs" />
@@ -145,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Components\Topic.ListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

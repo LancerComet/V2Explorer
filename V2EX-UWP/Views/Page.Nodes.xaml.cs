@@ -1,7 +1,8 @@
-﻿using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System;
 
 namespace V2EX.Views.Nodes {
   /// <summary>
@@ -9,12 +10,7 @@ namespace V2EX.Views.Nodes {
   /// </summary>
   public sealed partial class View : Page {
     private ViewModel vm { get; set; }
-
-    private Service.Node.Service nodeSrv {
-      get {
-        return new Service.Node.Service();
-      }
-    }
+    private Service.Node.Service nodeSrv = new Service.Node.Service();
 
     private void initVM () {
       var vm = new ViewModel();
@@ -22,13 +18,15 @@ namespace V2EX.Views.Nodes {
       DataContext = vm;
     }
 
-    private void getAllNodesResolve(List<Service.Node.Node> nodesList) {
-      this.vm.loading = false;
-      this.vm.nodesList = nodesList;
-    }
+    private async void initRequest () {
+      try {
+        var nodesList = await this.nodeSrv.getAllNodes();
+        this.vm.nodesList = nodesList;
+      } catch (Exception error) {
+        // TODO: Error Handler.
+      }
 
-    private void initRequest () {
-      this.nodeSrv.getAllNodes(getAllNodesResolve);
+      this.vm.loading = false;
     }
 
     public View() {
@@ -46,8 +44,8 @@ namespace V2EX.Views.Nodes {
     /// <summary>
     /// 节点列表.
     /// </summary>
-    private List<Service.Node.Node> _nodesList;
-    public List<Service.Node.Node> nodesList {
+    private List<Service.Node.ModelNode> _nodesList;
+    public List<Service.Node.ModelNode> nodesList {
       get {
         return this._nodesList;
       }

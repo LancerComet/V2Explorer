@@ -52,11 +52,10 @@
               Tapped="onTopicTap"
               ItemsSource="{Binding topicList}"
               NoSelectionContent="V2Explorer # Carry Your World #"
-              Foreground="LightGray"
             >
-              <!-- Topic List Item. -->
+              <!-- 主题列表项. -->
               <controls:MasterDetailsView.ItemTemplate>
-                <DataTemplate x:DataType="topicSrv:Topic">
+                <DataTemplate x:DataType="topicSrv:ModelTopic">
                   <StackPanel>
                     <Grid Padding="5, 10">
                       <Grid.RowDefinitions>
@@ -116,145 +115,95 @@
                 </DataTemplate>
               </controls:MasterDetailsView.ItemTemplate>
 
-              <!-- Topic Content, -->
+              <!-- 主题内容. -->
               <controls:MasterDetailsView.DetailsTemplate>
                 <DataTemplate>
-                  <ScrollViewer Padding="15, 0" Background="Red">
+                  <ScrollViewer Padding="15, 10">
+
+                    <!-- 帖子内容. -->
                     <StackPanel>
-                      <Ellipse x:Name="FromEllipse" Height="50" Width="50" Fill="Gray"></Ellipse>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
-                      <TextBlock>This is F@xking Long</TextBlock>
+                      
+                      <!-- 楼主帖子内容. -->
+                      <StackPanel Padding="5, 0">
+                        <!-- 楼主账号信息. -->
+                        <Grid Padding="5, 15">
+                          <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                          </Grid.RowDefinitions>
+
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+
+                          <!-- Avatar. -->
+                          <Grid Grid.Column="0" Grid.Row="0" Padding="0,0,15,0">
+                            <Ellipse Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center">
+                              <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding member.avatarURL, Converter={StaticResource stringToUri}}"></ImageBrush>
+                              </Ellipse.Fill>
+                            </Ellipse>
+                          </Grid>
+
+                          <!-- Topic Info. -->
+                          <Grid Grid.Column="1" Grid.Row="0">
+                            <Grid.RowDefinitions>
+                              <RowDefinition></RowDefinition>
+                              <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Margin="0" Grid.Column="0" Grid.Row="0" Text="{Binding title}" FontWeight="Bold" TextWrapping="Wrap" FontSize="17" Foreground="#555" IsTextSelectionEnabled="True"></TextBlock>
+                            <Grid Grid.Column="0" Grid.Row="1">
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                              </Grid.ColumnDefinitions>
+                              <TextBlock Grid.Column="0" FontFamily="Segoe MDL2 Assets" Text="&#xE2AF;" Foreground="#aaa" VerticalAlignment="Bottom"></TextBlock>
+                              <TextBlock Grid.Column="1" Margin="0, 10, 0, 0" Text="{Binding member.username}" TextWrapping="Wrap" FontSize="14" Foreground="#aaa" VerticalAlignment="Bottom" IsTextSelectionEnabled="True"></TextBlock>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
+                        <!-- 楼主帖子内容. -->
+                        <Grid Padding="0, 10, 0, 0">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          
+                          <TextBlock Foreground="#555" Grid.Column="0" Text="{Binding content}" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="True"></TextBlock>
+                        </Grid>
+                      </StackPanel>
+
+                      <!-- 回帖列表内容. -->
+                      <StackPanel Background="LightGray">
+                        <ListView></ListView>
+                      </StackPanel>
+                      
                     </StackPanel>
                   </ScrollViewer>
                 </DataTemplate>
               </controls:MasterDetailsView.DetailsTemplate>
 
+              <!-- 未显示内容时的模板. -->
               <controls:MasterDetailsView.NoSelectionContentTemplate>
                 <DataTemplate>
                   <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <SymbolIcon Symbol="Mail" RenderTransformOrigin=".5,.5">
+                    <SymbolIcon Symbol="Emoji" RenderTransformOrigin=".5,.5" Foreground="LightGray">
                       <SymbolIcon.RenderTransform>
                         <CompositeTransform ScaleX="2" ScaleY="2"/>
                       </SymbolIcon.RenderTransform>
                     </SymbolIcon>
-                    <TextBlock Text="{Binding}" FontSize="24" Margin="0,12"/>
+                    <TextBlock Text="{Binding}" FontSize="16" Margin="0,12" Foreground="LightGray"/>
                   </StackPanel>
                 </DataTemplate>
               </controls:MasterDetailsView.NoSelectionContentTemplate>
 
             </controls:MasterDetailsView>
-
-            <!--<ListView Grid.Row="0" ItemsSource="{Binding topicList}" SelectionMode="None">
-              <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                  <Setter Property="Padding" Value="0"></Setter>
-                  <Setter Property="Margin" Value="0"></Setter>
-                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                  <Setter Property="Background" Value="Transparent"></Setter>
-                </Style>
-              </ListView.ItemContainerStyle>
-
-              <ListView.ItemTemplate>
-                <DataTemplate>
-                  <ListViewItem Background="Transparent" Padding="0, 0, 10, 0">
-                    <Grid Padding="10, 15">
-                      <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                      </Grid.RowDefinitions>
-
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                      </Grid.ColumnDefinitions>
-                      
-                      --><!-- Avatar. --><!--
-                      <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0, 0, 20, 0">
-                        <Ellipse Width="50" Height="50">
-                          <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding member.avatar_normal, Converter={StaticResource stringToUri}}"></ImageBrush>
-                          </Ellipse.Fill>
-                        </Ellipse>
-                      </StackPanel>
-
-                      --><!-- Text Info. --><!--
-                      <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
-                        <TextBlock Text="{Binding title}" FontSize="16" TextWrapping="Wrap" HorizontalAlignment="Stretch"></TextBlock>
-                        
-                        <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0" HorizontalAlignment="Stretch">
-                          <StackPanel Padding="4" Margin="0, 0, 5, 0" Background="#f3faff" VerticalAlignment="Center" CornerRadius="5">
-                            <TextBlock Text="{Binding node.title}" Foreground="#6eb4ff" FontSize="12"></TextBlock>
-                          </StackPanel>
-
-                          <StackPanel Orientation="Horizontal" Margin="10, 0">
-                            <StackPanel.Resources>
-                              <Style TargetType="TextBlock">
-                                <Setter Property="FontSize" Value="12"></Setter>
-                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                                <Setter Property="Foreground" Value="#999"></Setter>
-                              </Style>
-                            </StackPanel.Resources>
-                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE2AF;"></TextBlock>
-                            <TextBlock Text="{Binding member.username}" Margin="5, 0"></TextBlock>
-                          </StackPanel>
-
-                          <StackPanel Orientation="Horizontal" Margin="5, 0, 0, 0">
-                            <StackPanel.Resources>
-                              <Style TargetType="TextBlock">
-                                <Setter Property="FontSize" Value="12"></Setter>
-                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                                <Setter Property="Foreground" Value="#999"></Setter>
-                              </Style>
-                            </StackPanel.Resources>
-                            <TextBlock Text="{Binding last_modified}"></TextBlock>
-                          </StackPanel>
-                        </StackPanel>
-                        
-                      </StackPanel>
-                    </Grid>
-                  </ListViewItem>
-                </DataTemplate>
-              </ListView.ItemTemplate>
-            </ListView>-->
           </PivotItem>
         </DataTemplate>
       </Pivot.ItemTemplate>

@@ -1,16 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using V2EX.Service.Topic;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace V2EX.Views.Topic {
   /// <summary>
-  /// 节点数据类型.
+  /// Topic 页面视图中的节点数据类型.
   /// </summary>
-  public class Node : Service.Node.NodeSimple, INotifyPropertyChanged {
-    private List<Service.Topic.Topic> _topicList;
-    public List<Service.Topic.Topic> topicList {
+  public class NodeDataKeeper : Service.Node.ModelNodeSimple, INotifyPropertyChanged {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void notify(string propertyName) {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private List<Service.Topic.ModelTopic> _topicList;
+    public List<Service.Topic.ModelTopic> topicList {
       get {
         return this._topicList;
       }
@@ -21,14 +27,9 @@ namespace V2EX.Views.Topic {
       }
     }
 
-    public Node (string name, string label) {
+    public NodeDataKeeper (string name, string label) {
       this.name = name;
       this.label = label;
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    private void notify (string propertyName) {
-      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 
@@ -39,21 +40,21 @@ namespace V2EX.Views.Topic {
     /// <summary>
     /// 预设节点列表.
     /// </summary>
-    public List<Node> nodes {
+    public List<NodeDataKeeper> nodes {
       get {
-        return new List<Node>() {
-          new Node("all", "全部"),
-          new Node("hot", "最热"),
-          new Node("tech", "技术"),
-          new Node("creative", "创意"),
-          new Node("play", "好玩"),
-          new Node("windows", "Windows"),
-          new Node("apple", "Apple"),
-          new Node("jobs", "酷工作"),
-          new Node("deals", "交易"),
-          new Node("city", "城市"),
-          new Node("qna", "问与答"),
-          new Node("r2", "R2")
+        return new List<NodeDataKeeper>() {
+          new NodeDataKeeper("all", "全部"),
+          new NodeDataKeeper("hot", "最热"),
+          new NodeDataKeeper("tech", "技术"),
+          new NodeDataKeeper("creative", "创意"),
+          new NodeDataKeeper("play", "好玩"),
+          new NodeDataKeeper("windows", "Windows"),
+          new NodeDataKeeper("apple", "Apple"),
+          new NodeDataKeeper("jobs", "酷工作"),
+          new NodeDataKeeper("deals", "交易"),
+          new NodeDataKeeper("city", "城市"),
+          new NodeDataKeeper("qna", "问与答"),
+          new NodeDataKeeper("r2", "R2")
         };
       }
     }
@@ -72,6 +73,9 @@ namespace V2EX.Views.Topic {
       }
     }
 
+    /// <summary>
+    /// Notify 实现.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
     private void notify(string propertyName) {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -105,26 +109,17 @@ namespace V2EX.Views.Topic {
     /// </summary>
     /// <param name="nodeName"></param>
     /// <param name="targetNode"></param>
-    public void getTopics (string nodeName, Node targetNode) {
+    public async void getTopics (string nodeName, NodeDataKeeper targetNode) {
       this.vm.loading = true;
-      this.topicSrv.getTopics(nodeName, topicList => {
-        targetNode.topicList = topicList;
-        this.vm.loading = false;
-      }, error => {
-        // ...
-        this.vm.loading = false;
-      });
-    }
 
-    public View() {
-      NavigationCacheMode = NavigationCacheMode.Enabled;
-      this.InitializeComponent();
-      
-      // 设置 DataContext.
-      this.DataContext = this.vm;
+      try {
+        var result = await this.topicSrv.getTopicsUnderNode(nodeName);
+        targetNode.topicList = result;
+      } catch (Exception error) {
+        // TODO: Error handler.
+      }
 
-      // 获取初始数据.
-      this.getTopics("all", this.vm.nodes.Find(item => item.name == "all"));
+      this.vm.loading = false;
     }
 
     /// <summary>
@@ -133,7 +128,7 @@ namespace V2EX.Views.Topic {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void onSelectionChanged(object sender, SelectionChangedEventArgs e) {
-      var selectedNode = (sender as Pivot).SelectedItem as Node;
+      var selectedNode = (sender as Pivot).SelectedItem as NodeDataKeeper;
       var nodeName = selectedNode.name;
       this.getTopics(nodeName, selectedNode);
     }
@@ -143,11 +138,37 @@ namespace V2EX.Views.Topic {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void onTopicTap(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e) {
-      var selectedItem = (sender as Microsoft.Toolkit.Uwp.UI.Controls.MasterDetailsView).SelectedItem as Service.Topic.Topic;
-      var url = selectedItem.url;
+    private void onTopicTap (object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e) {
+      var selectedItem = (sender as Microsoft.Toolkit.Uwp.UI.Controls.MasterDetailsView).SelectedItem as ModelTopic;
+      var topicList = (sender as Microsoft.Toolkit.Uwp.UI.Controls.MasterDetailsView).ItemsSource as List<ModelTopic>;
       var id = selectedItem.id;
-      Console.WriteLine(url);
+      var index = topicList.FindIndex(item => item.id == id);  // 获取点击帖子是列表中的第几项.
+      this.loadCurrentShowingTopicData(id, topicList[index]);
+    }
+
+    /// <summary>
+    /// 加载选中帖子主体数据.
+    /// </summary>
+    private async void loadCurrentShowingTopicData (string topicId, ModelTopic bindSource) {
+      try {
+        ModelTopic result = await this.topicSrv.getTopicMainData(topicId);
+
+        // 将获取的帖子数据赋值至列表中的项.
+        bindSource.content = result.content;
+      } catch (Exception error) {
+        throw error;
+      }
+    }
+
+    public View() {
+      NavigationCacheMode = NavigationCacheMode.Enabled;
+      this.InitializeComponent();
+
+      // 设置 DataContext.
+      this.DataContext = this.vm;
+
+      // 获取初始数据.
+      this.getTopics("all", this.vm.nodes.Find(item => item.name == "all"));
     }
   }
 }

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using V2EX.Service.Http;
 
 namespace V2EX.Service.Node {
   /// <summary>
   /// 话题节点数据类型. 用于定义单个节点.
   /// </summary>
-  public class Node {
+  public class ModelNode {
     public int id { get; set; }
     public string name { get; set; }
     public string url { get; set; }
@@ -22,10 +23,10 @@ namespace V2EX.Service.Node {
   /// <summary>
   /// 简化节点类型.
   /// </summary>
-  public class NodeSimple {
+  public class ModelNodeSimple {
     public string name { get; set; }
     public string label { get; set; }
-    public NodeSimple () { }
+    public ModelNodeSimple () { }
   }
 
   /// <summary>
@@ -35,7 +36,7 @@ namespace V2EX.Service.Node {
     /// <summary>
     /// 请求回调委托定义.
     /// </summary>
-    public delegate void Resolve(List<Node> list);
+    public delegate void Resolve(List<ModelNode> list);
     public delegate void Reject(Exception error);
 
     /// <summary>
@@ -46,8 +47,8 @@ namespace V2EX.Service.Node {
     /// <summary>
     /// 获取所有节点.
     /// </summary>
-    public void getAllNodes (Resolve resolve = null, Reject reject = null) {
-      httpRequest.get<Node>("https://www.v2ex.com/api/nodes/all.json", resolve, reject);
+    public async Task<List<ModelNode>> getAllNodes () {
+      return await httpRequest.get<ModelNode>("https://www.v2ex.com/api/nodes/all.json");
     }
 
     /// <summary>
