@@ -1,4 +1,4 @@
-﻿using HtmlAgilityPack;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,7 +81,7 @@ namespace V2EX.Service.Topic {
           var repliesElement = topicNode.Descendants("a").ToList().Find(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "count_livid");
 
           return new Topic() {
-            id = new Regex("\\d").Match(titleNode.Attributes["href"].Value).ToString() ?? "",
+            id = new Regex("\\d+").Match(titleNode.Attributes["href"].Value).ToString() ?? "",
             title = titleNode.InnerText ?? "",
             url = "https://www.v2ex.com" + titleNode.Attributes["href"].Value ?? "",
             content = "",
@@ -103,7 +103,6 @@ namespace V2EX.Service.Topic {
           };
         });
 
-        Console.WriteLine("Debug");
         resolve?.Invoke(topicList.ToList());
       } catch (Exception error) {
         reject?.Invoke(error);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.UI.Xaml.Controls;
@@ -133,9 +133,21 @@ namespace V2EX.Views.Topic {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void onSelectionChanged(object sender, SelectionChangedEventArgs e) {
-      var selectedNode = (Node)((Pivot)sender).SelectedItem;
+      var selectedNode = (sender as Pivot).SelectedItem as Node;
       var nodeName = selectedNode.name;
       this.getTopics(nodeName, selectedNode);
+    }
+
+    /// <summary>
+    /// 帖子选择事件.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void onTopicTap(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e) {
+      var selectedItem = (sender as Microsoft.Toolkit.Uwp.UI.Controls.MasterDetailsView).SelectedItem as Service.Topic.Topic;
+      var url = selectedItem.url;
+      var id = selectedItem.id;
+      Console.WriteLine(url);
     }
   }
 }
