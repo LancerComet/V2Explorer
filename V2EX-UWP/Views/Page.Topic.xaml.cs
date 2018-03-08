@@ -151,10 +151,13 @@ namespace V2EX.Views.Topic {
     /// </summary>
     private async void loadCurrentShowingTopicData (string topicId, ModelTopic bindSource) {
       try {
-        ModelTopic result = await this.topicSrv.getTopicMainData(topicId);
+        // 获取 MainData.
+        ModelTopic mainData = await this.topicSrv.getTopicMainData(topicId);
+        bindSource.content = mainData.content;  // 将获取的帖子数据赋值至列表中的项.
 
-        // 将获取的帖子数据赋值至列表中的项.
-        bindSource.content = result.content;
+        // 获取回帖 Data.
+        List<ModelRepliedTopic> repliedTopics = await this.topicSrv.getReplies(topicId);
+        bindSource.repliedTopics = repliedTopics;
       } catch (Exception error) {
         throw error;
       }

@@ -29,7 +29,18 @@ namespace V2EX.Service.Topic {
       }
     }
 
-    public string content_rendered { get; set; }
+    private List<ModelRepliedTopic> _repliedTopics;
+    public List<ModelRepliedTopic> repliedTopics {
+      get {
+        return this._repliedTopics;
+      }
+      set {
+        this._repliedTopics = value;
+        this.notify("repliedTopics");
+      }
+    }
+
+    public string contentRendered { get; set; }
     public int replies { get; set; }
     public ModelMember member { get; set; }
     public Node.ModelNodeSimple node { get; set; }
@@ -42,12 +53,24 @@ namespace V2EX.Service.Topic {
     }
   }
 
+  public class ModelRepliedTopic {
+    public string id { get; set; }
+    public int thanks { get; set; }
+    public string content { get; set; }
+    public string contentRendered { get; set; }
+    public ModelMember member { get; set; }
+    public int created { get; set; }
+    public int lastModified { get; set; }
+  }
+
   /// <summary>
   /// Topic 相关服务.
   /// </summary>
   public class Service {
     public delegate void RequestResolve (List<ModelTopic> topicList = null);
     public delegate void RequestReject (Exception error = null);
+
+    private Regex urlRegExp = new Regex("http(s)?:");
 
     /// <summary>
     /// HTTP 服务.
@@ -93,7 +116,7 @@ namespace V2EX.Service.Topic {
             title = titleNode.InnerText ?? "",
             url = "https://www.v2ex.com" + titleNode.Attributes["href"].Value ?? "",
             content = "",
-            content_rendered = "",
+            contentRendered = "",
             replies = Int32.Parse(repliesElement != null ? repliesElement.InnerText : "0"),
             member = new ModelMember() {
               username = new Regex("[\\s\\d\\w]+$").Match(topicNode.Descendants("img").First().ParentNode.Attributes["href"].Value).Value ?? "--",
@@ -134,7 +157,7 @@ namespace V2EX.Service.Topic {
           replies = data.replies,
           member = new ModelMember() {
             username = data.member.username,
-            avatarURL = data.member.avatar_normal,
+            avatarURL = this.urlRegExp.IsMatch(data.member.avatar_normal) ? data.member.avatar_normal : "https:" + data.member.avatar_normal,
             url = ""
           },
           node = new Node.ModelNodeSimple() {
@@ -143,6 +166,35 @@ namespace V2EX.Service.Topic {
           }
         };
         return modelTopic;
+      } catch (Exception error) {
+        throw error;
+      }
+    }
+
+    /// <summary>
+    /// 获取某话题的回帖数据.
+    /// </summary>
+    /// <param name="topicId"></param>
+    /// <returns></returns>
+    public async Task<List<ModelRepliedTopic>> getReplies (string topicId) {
+      try {
+        var data = await this.httpRequest.get<RepliedTopicFromServer>("https://www.v2ex.com/api/replies/show.json?topic_id=" + topicId);
+        List<ModelRepliedTopic> result = data.Select(item => {
+          return new ModelRepliedTopic() {
+            id = item.id.ToString(),
+            thanks = item.thanks,
+            content = item.content,
+            contentRendered = item.content_rendered,
+            member = new ModelMember() {
+              username = item.member.username,
+              avatarURL = this.urlRegExp.IsMatch(item.member.avatar_normal) ? item.member.avatar_normal : "https:" + item.member.avatar_normal,
+              url = ""
+            },
+            created = item.created,
+            lastModified = item.last_modified
+          };
+        }).ToList();
+        return result;
       } catch (Exception error) {
         throw error;
       }
@@ -180,6 +232,16 @@ namespace V2EX.Service.Topic {
       public string avatar_mini { get; set; }
       public string avatar_normal { get; set; }
       public string avatar_large { get; set; }
+    }
+
+    public class RepliedTopicFromServer {
+      public int id { get; set; }
+      public int thanks { get; set; }
+      public string content { get; set; }
+      public string content_rendered { get; set; }
+      public TopicUserInfoFromServer member { get; set; }
+      public int created { get; set; }
+      public int last_modified { get; set; }
     }
 
     public Service () {}

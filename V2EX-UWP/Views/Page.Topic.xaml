@@ -13,6 +13,8 @@
 
   <Page.Resources>
     <converter:StringToUri x:Key="stringToUri"></converter:StringToUri>
+    <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
+    <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
   </Page.Resources>
 
   <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -27,7 +29,7 @@
     </StackPanel>
 
     <!-- Pivot Component. -->
-    <Pivot x:Name="rootPivot" Grid.Row="1" ItemsSource="{Binding nodes}" Tag="{Binding name}" SelectionChanged="onSelectionChanged">
+    <Pivot x:Name="rootPivot" Grid.Row="1" ItemsSource="{Binding nodes}" Tag="{Binding name}" SelectionChanged="onSelectionChanged" Margin="10,0,-10,0"  Visibility="{Binding loading, Converter={StaticResource falseToVisible}}">
       <Pivot.Resources>
         <Style TargetType="PivotItem">
           <Setter Property="Margin" Value="0"></Setter>
@@ -56,7 +58,7 @@
               <!-- 主题列表项. -->
               <controls:MasterDetailsView.ItemTemplate>
                 <DataTemplate x:DataType="topicSrv:ModelTopic">
-                  <StackPanel>
+                  <Grid>
                     <Grid Padding="5, 10">
                       <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
@@ -111,14 +113,14 @@
 
                       </StackPanel>
                     </Grid>
-                  </StackPanel>
+                  </Grid>
                 </DataTemplate>
               </controls:MasterDetailsView.ItemTemplate>
 
               <!-- 主题内容. -->
               <controls:MasterDetailsView.DetailsTemplate>
                 <DataTemplate>
-                  <ScrollViewer Padding="15, 10">
+                  <ScrollViewer Padding="15, 10, 30, 10">
 
                     <!-- 帖子内容. -->
                     <StackPanel>
@@ -179,11 +181,71 @@
                         </Grid>
                       </StackPanel>
 
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="20"></ColumnDefinition>
+                          <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Rectangle Width="5" Height="30" Margin="0, 10, 10, 0">
+                          <Rectangle.Fill>
+                            <SolidColorBrush Color="#3f9443"></SolidColorBrush>
+                          </Rectangle.Fill>
+                        </Rectangle>
+                        
+                        <TextBlock LineHeight="50" Grid.Column="1" Text="回帖" FontSize="25" Margin="0, 25, 0, 0"></TextBlock>
+                      </Grid>
+
                       <!-- 回帖列表内容. -->
-                      <StackPanel Background="LightGray">
-                        <ListView></ListView>
-                      </StackPanel>
-                      
+                      <ListView ItemsSource="{Binding repliedTopics}" SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                          <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0, 10"></Setter>
+                            <Setter Property="Margin" Value="10, 0, 10, 10"></Setter>
+                            <Setter Property="BorderBrush" Value="#eee"></Setter>
+                            <Setter Property="BorderThickness" Value="0"></Setter>
+                            <Setter Property="Background" Value="#fff"></Setter>
+                          </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
+                          <DataTemplate>
+                            <Grid>
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                              </Grid.ColumnDefinitions>
+
+                              <Grid Grid.Column="0">
+                                <Ellipse Width="50" Height="50" VerticalAlignment="Top">
+                                  <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding member.avatarURL, Converter={StaticResource stringToUri}}"></ImageBrush>
+                                  </Ellipse.Fill>
+                                </Ellipse>
+                              </Grid>
+
+                              <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                  <RowDefinition></RowDefinition>
+                                  <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="0, 0, 0, 5">
+                                  <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="18"></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                  </Grid.ColumnDefinitions>
+
+                                  <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE2AF;" FontSize="14" VerticalAlignment="Center" Foreground="#aaa"></TextBlock>
+                                  <TextBlock Grid.Column="1" Text="{Binding member.username}" TextWrapping="Wrap" FontSize="14" VerticalAlignment="Center" Foreground="#aaa"></TextBlock>
+                                </Grid>
+                                <TextBlock Grid.Row="1" Text="{Binding content}" TextWrapping="Wrap"></TextBlock>
+                              </Grid>
+                            </Grid>
+                          </DataTemplate>
+                        </ListView.ItemTemplate>
+                      </ListView>
+
                     </StackPanel>
                   </ScrollViewer>
                 </DataTemplate>
@@ -208,7 +270,14 @@
         </DataTemplate>
       </Pivot.ItemTemplate>
     </Pivot>
-    
+
+    <!-- Loading Progress. -->
+    <ScrollViewer Background="#fff" Grid.Row="1" Visibility="{Binding loading, Converter={StaticResource trueToVisible}}">
+      <StackPanel VerticalAlignment="Center">
+        <ProgressBar IsIndeterminate="True" Foreground="Green"></ProgressBar>
+        <TextBlock HorizontalAlignment="Center" Margin="20" Foreground="Green">正在玩命载入中... _(•̀ᴗ•́ 」∠ ❀)_</TextBlock>
+      </StackPanel>
+    </ScrollViewer>
   </Grid>
   
 </Page>
