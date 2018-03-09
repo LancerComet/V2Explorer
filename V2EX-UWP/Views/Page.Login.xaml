@@ -1,0 +1,66 @@
+﻿<Page
+    x:Class="V2EX.Views.Login.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:V2EX.Converter"
+    mc:Ignorable="d"
+  >
+
+    <Page.Resources>
+      <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
+      <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
+    </Page.Resources>
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"></RowDefinition>
+        <RowDefinition Height="*"></RowDefinition>
+      </Grid.RowDefinitions>
+      
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"></ColumnDefinition>
+      </Grid.ColumnDefinitions>
+
+      <StackPanel Name="HeaderImage" Grid.Row="0" Grid.Column="0" Background="Green" Height="200"></StackPanel>
+
+      <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Margin="20">
+        <StackPanel>
+          <StackPanel.Resources>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            </Style>
+          </StackPanel.Resources>
+
+          <StackPanel Background="#C9D5E0" Width="200" Height="200" Margin="0, 10, 0, 30" CornerRadius="100"></StackPanel>
+
+          <TextBlock FontSize="20" Foreground="Green">登陆至 V2EX</TextBlock>
+          <TextBlock FontSize="14" Foreground="#34495e">Way to Explore</TextBlock>
+
+          <StackPanel Orientation="Vertical" MaxWidth="400">
+            <TextBlock Margin="10, 20, 0, 5" FontSize="12" HorizontalAlignment="Left" Foreground="#333">用户名</TextBlock>
+            <TextBox Name="Username" BorderBrush="Green" Foreground="#34495e" Text="{Binding username, Mode=TwoWay}"></TextBox>
+          </StackPanel>
+        
+          <StackPanel Orientation="Vertical" MaxWidth="400">
+            <TextBlock Margin="10, 10, 0, 5" FontSize="12" HorizontalAlignment="Left" Foreground="#333">密码</TextBlock>
+            <PasswordBox Name="Password" BorderBrush="Green" Foreground="#34495e" Password="{Binding password, Mode=TwoWay}"></PasswordBox>
+          </StackPanel>
+
+          <StackPanel Orientation="Vertical" MaxWidth="400">
+            <Button Click="login" HorizontalAlignment="Center" Margin="20, 20, 20, 10" Background="Green" Foreground="#fff" BorderThickness="0" Padding="20, 10" FontSize="14">登陆</Button>
+            <HyperlinkButton NavigateUri="https://www.v2ex.com/forgot" HorizontalAlignment="Center" Foreground="#708AA0">忘记密码</HyperlinkButton>
+          </StackPanel>
+        </StackPanel>
+      </StackPanel>
+
+
+      <ScrollViewer Grid.Row="1" Grid.Column="0" Background="#fff" Opacity="0.7" Visibility="{Binding loading, Converter={StaticResource trueToVisible}}">
+        <StackPanel VerticalAlignment="Center">
+          <ProgressBar IsIndeterminate="True"></ProgressBar>
+          <TextBlock HorizontalAlignment="Center">毁灭地球中...</TextBlock>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+</Page>

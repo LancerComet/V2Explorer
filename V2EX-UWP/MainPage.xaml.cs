@@ -9,48 +9,48 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-using V2EX.Service;
 using Windows.UI.Core;
 
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
+using V2EX.Service.EventBus;
 
 namespace V2EX {
-  public class ViewModel {
-    public List<View> views {
+  /// <summary>
+  /// 主页面视图对象.
+  /// </summary>
+  public class MainVM {
+    /// <summary>
+    /// 视图列表.
+    /// </summary>
+    public List<Service.View.View> views {
       get {
-        return Service.ViewConfig.views;
+        return Service.View.Config.views;
+      }
+    }
+
+    /// <summary>
+    /// 登陆状态标识.
+    /// </summary>
+    public bool isLogin {
+      get {
+        return Service.Login.Service.isLogin;
       }
     }
   }
 
-
+  /// <summary>
+  /// 主体视图类.
+  /// </summary>
   public partial class MainPage : Page {
-    public MainPage() {
-      this.InitializeComponent();
-      this.initBackButton();
-      this.navigateToMainPage();
-      DataContext = new ViewModel();
-    }
     /// <summary>
     /// 初始化 BackButton 相关事件.
     /// </summary>
     /// 
-    void initBackButton () {
+    private void initBackButton () {
       // 注册导航回调.
       AppCanvas.Navigated += (object sender, NavigationEventArgs e) => {
         // 在每次导航时更新 backButton 可见性.
@@ -73,15 +73,14 @@ namespace V2EX {
         AppCanvas.CanGoBack
           ? AppViewBackButtonVisibility.Visible
           : AppViewBackButtonVisibility.Collapsed;
-
     }
 
     /// <summary>
     /// 导航到主页面. 
     /// </summary>
     /// 
-    void navigateToMainPage () {
-      Service.ViewConfig.views.Any(view => {
+    private void navigateToMainPage () {
+      Service.View.Config.views.Any(view => {
         if (view.isSelected) {
           AppCanvas.Navigate(view.page);
           return true;
@@ -96,7 +95,7 @@ namespace V2EX {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// 
-    void toggleSplitMenu (object sender, RoutedEventArgs e) {
+    private void toggleSplitMenu (object sender, RoutedEventArgs e) {
       AppSplitView.IsPaneOpen = !AppSplitView.IsPaneOpen;
     }
 
@@ -106,9 +105,55 @@ namespace V2EX {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// 
-    void navigateToView (object sender, SelectionChangedEventArgs e) {
-      var selectedIndex = ViewMenus.SelectedIndex;
-      AppCanvas.Navigate(Service.ViewConfig.views[selectedIndex].page);
+    private void navigateToView (object sender, RoutedEventArgs e) {
+      var targetPage = ((Button)sender).Tag as Type;
+      AppCanvas.Navigate(targetPage);
+    }
+
+    /// <summary>
+    /// 导航至
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void navigateToLogin (object sender, RoutedEventArgs e) {
+      AppCanvas.Navigate(typeof(V2EX.Views.Login.View));
+    }
+
+    /// <summary>
+    /// 导航完成后回调事件.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// 
+    private void onNavigated (object sender, NavigationEventArgs e) {
+      var targetPage = ((Frame)sender).CurrentSourcePageType;
+      Service.View.Config.views.ForEach(item => {
+        item.isSelected = (item.page == targetPage);
+      });
+    }
+
+    /// <summary>
+    /// 后退方法.
+    /// </summary>
+    private void goBack (object value) {
+      if (AppCanvas.CanGoBack) {
+        AppCanvas.GoBack();
+      }
+    }
+
+    /// <summary>
+    /// 注册事件.
+    /// </summary>
+    private void registerEvents () {
+      EventBus.on("AppCanvas:GoBack", this.goBack);
+    }
+
+    public MainPage() {
+      this.InitializeComponent();
+      this.initBackButton();
+      this.navigateToMainPage();
+      this.registerEvents();
+      DataContext = new MainVM();
     }
   }
 }

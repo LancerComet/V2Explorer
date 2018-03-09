@@ -5,47 +5,96 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:V2EX"
+    xmlns:converter="using:V2EX.Converter"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converter:TrueToVisible x:Key="trueToVisible"></converter:TrueToVisible>
+        <converter:FalseToVisible x:Key="falseToVisible"></converter:FalseToVisible>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationForegroundThemeBrush}">
         <SplitView
             Name="AppSplitView"
             DisplayMode="CompactOverlay"
             IsPaneOpen="False"
-            CompactPaneLength="50"
+            CompactPaneLength="48"
             OpenPaneLength="150"
         >
 
             <SplitView.Pane>
                 <!-- Menu Buttons -->
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0.4,0">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
 
                     <Grid.Resources>
-                        <Style TargetType="StackPanel"></Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#34495e"></Setter>
+                        </Style>
                     </Grid.Resources>
 
                     <!-- Hamburg Menu -->
-                    <StackPanel Grid.Row="0">
-                        <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="toggleSplitMenu"></Button>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <Button Name="HamburgerButton" Content="&#xE700;" Click="toggleSplitMenu" Style="{StaticResource .hamburger-menu}"></Button>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="8, 0, 0, 0"></Setter>
+                                    <Setter Property="FontSize" Value="12"></Setter>
+                                    <Setter Property="Foreground" Value="#aaa"></Setter>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock FontSize="12">V2Explorer</TextBlock>
+                            <TextBlock FontSize="12">0.1.0</TextBlock>
+                        </StackPanel>
                     </StackPanel>
 
-                    <ListBox Name="ViewMenus" ItemsSource="{Binding views}" Grid.Row="1" SelectionMode="Single" Background="Transparent" SelectionChanged="navigateToView">
-                        <ListBox.ItemTemplate>
+                    <!-- Avatar: Guest -->
+                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Converter={StaticResource falseToVisible}}">
+                        <Button BorderThickness="0" Padding="0" Background="Transparent" Click="navigateToLogin">
+                            <StackPanel Orientation="Horizontal" Style="{StaticResource .hamburger-avatar}">
+                                <StackPanel Style="{StaticResource .hamburger-avatar-img}"></StackPanel>
+                                <TextBlock Style="{StaticResource .hamburger-avatar-username}">请登陆</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    
+                    <!-- Avatar: User -->
+                    <StackPanel Grid.Row="1" Visibility="{Binding isLogin, Converter={StaticResource trueToVisible}}">
+                        
+                    </StackPanel>
+
+                    <!-- Views Menu -->
+                    <ListView Grid.Row="2" Name="ViewsMenu" ItemsSource="{Binding views}" SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+                                <Setter Property="Padding" Value="0"></Setter>
+                                <Setter Property="Margin" Value="0, 0, -15, 0"></Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ListBoxItem Padding="6">
+                                <Button Click="navigateToView" Tag="{Binding page}" Style="{StaticResource .view-menu}">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="{Binding Path=icon}"></TextBlock>
-                                        <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding Path=label}"></TextBlock>
+                                        <StackPanel Background="#3f9443" Width="5" Height="30" Margin="-8" HorizontalAlignment="Left" Visibility="{Binding isSelected}"></StackPanel>
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Margin="9, 0, 0, 0" VerticalAlignment="Center" Text="{Binding icon}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0" Text="{Binding label}"></TextBlock>
                                     </StackPanel>
-                                </ListBoxItem>
+                                </Button>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <!--<StackPanel Grid.Row="2" HorizontalAlignment="Right">
+                        <AppBarButton Label="关于" Icon="More"></AppBarButton>
+                    </StackPanel>-->
+
 
                     <!--<ListBox Grid.Row="2" Name="ViewMenusBottom" SelectionMode="Single" SelectionChanged="navigateToView">
                         <ListBoxItem Name="AboutPage" Padding="17">
@@ -60,7 +109,7 @@
             </SplitView.Pane>
 
             <SplitView.Content>
-                <Frame Name="AppCanvas"/>
+                <Frame Name="AppCanvas" Navigated="onNavigated"/>
             </SplitView.Content>
         </SplitView>
     </Grid>

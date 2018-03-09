@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  v2ex-uwp:
+    image: v2ex-uwp
+    build:
+      context: .\V2EX-UWP
+      dockerfile: Dockerfile
