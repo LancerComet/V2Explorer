@@ -1,19 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace V2EX.Service.Login {
-  public class Service {
-    public delegate void Resolve(bool isLogin);
-    public delegate void Reject(string type, Exception error);
-
+  public abstract class Account {
     /// <summary>
     /// 是否处于登陆状态.
     /// </summary>
-    public static bool isLogin { get; set; }
+    public static bool isLogin {
+      get {
+        return Account.accountInfo.username != "" && Account.accountInfo.username != null;
+      }
+    }
 
     /// <summary>
     /// Cookie 字符串.
@@ -21,16 +23,43 @@ namespace V2EX.Service.Login {
     public static string cookie { get; set; }
 
     /// <summary>
-    /// 登陆方法.
-    /// V2EX 没有提供 API 登陆接口，需要解析网页获取 input 中的动态字段后提交登陆.
+    /// 用户账号数据.
     /// </summary>
-    public static async void login (string username, string password, Resolve resolve = null, Reject reject = null) {
-      // 解析网页获取必要信息后发送登陆请求.
+    public static Member.ModelLoginMember accountInfo = new Member.ModelLoginMember() {
+      username = "",
+      avatarURL = "",
+      url = ""
+    };
+  }
+
+  /// <summary>
+  /// V2ex 登陆预置数据.
+  /// usernameKey, passwordKey, captchaKey 作为 Post 请求发送时的表单 Name.
+  /// </summary>
+  public class V2EXLoginPeparingData {
+    public string usernameKey { get; set; }
+    public string passwordKey { get; set; }
+    public string captchaKey { get; set; }
+    public string once { get; set; }
+    public string captchaUrl {
+      get {
+        return "https://www.v2ex.com/_captcha?once=" + this.once;
+      }
+    }
+  }
+
+  public abstract class Service {
+    /// <summary>
+    /// 访问 V2EX 登陆页面获取必要信息.
+    /// </summary>
+    /// <returns></returns>
+    public static async Task<V2EXLoginPeparingData> getLoginPresetData () {
       HtmlWeb web = new HtmlWeb();
       var loginPage = await web.LoadFromWebAsync("https://www.v2ex.com/signin");
 
       string usernameKey = "";
       string passwordKey = "";
+      string captchaKey = "";
       string once = "";
 
       var inputNodes = loginPage.DocumentNode.Descendants("input").ToList();
@@ -38,49 +67,78 @@ namespace V2EX.Service.Login {
       // 从登陆页面解析节点获取必要信息.
       try {
         // 获取 usernameKey.
-        var usernameNode = inputNodes
-            .Find(item => {
-              return item.Attributes["placeholder"] != null
-               ? item.Attributes["placeholder"].Value == "用户名或电子邮箱地址"
-               : false;
-            });
+        var usernameNode = inputNodes.Find(item => {
+          return item.Attributes["placeholder"] != null
+            ? item.Attributes["placeholder"].Value == "用户名或电子邮箱地址"
+            : false;
+        });
 
         usernameKey = usernameNode != null
           ? usernameNode.Attributes["name"].Value
           : "";
 
         // 获取 passwordKey.
-        var passwordNode = inputNodes
-            .Find(item => {
-              return item.Attributes["type"] != null
-                ? item.Attributes["type"].Value == "password"
-                : false;
-            });
+        var passwordNode = inputNodes.Find(item => {
+          return item.Attributes["type"] != null
+            ? item.Attributes["type"].Value == "password"
+            : false;
+        });
 
         passwordKey = passwordNode != null
           ? passwordNode.Attributes["name"].Value
           : "";
 
+        // 获取 CaptchaKey.
+        var captchaInputNode = inputNodes.Find(item => {
+          return item.Attributes["placeholder"] != null
+            ? item.Attributes["placeholder"].Value == "请输入上图中的验证码"
+            : false;
+        });
+
+        captchaKey = captchaInputNode != null
+          ? captchaInputNode.Attributes["name"].Value
+          : "";
+
         // 获取 once.
-        var onceNode = inputNodes
-          .Find(item => {
-            return item.Attributes["name"] != null
-              ? item.Attributes["name"].Value == "once"
-              : false;
-          });
+        var onceNode = inputNodes.Find(item => {
+          return item.Attributes["name"] != null
+            ? item.Attributes["name"].Value == "once"
+            : false;
+        });
 
         once = onceNode != null
           ? onceNode.Attributes["value"].Value
           : "";
 
-        if (usernameKey == "" || passwordKey == "" || once == "") {
-          throw new Exception("未在登陆页面获取到必要信息.");
+        if (usernameKey == "" || passwordKey == "" || captchaKey == "" || once == "") {
+          throw new Exception("DATA_NOT_ENOUGH");
         }
 
+        return new V2EXLoginPeparingData() {
+          usernameKey = usernameKey,
+          passwordKey = passwordKey,
+          captchaKey = captchaKey,
+          once = once
+        };
+      } catch (Exception error) {
+        throw error;
+      }
+    }
+
+    /// <summary>
+    /// 登陆请求函数.
+    /// </summary>
+    public static async Task<string> login (
+      string username, string password,
+      string once, string captcha,
+      string usernameKey, string passwordKey, string captchaKey
+    ) {
+      try {
         // 创建发送数据.
         Dictionary<string, string> data = new Dictionary<string, string>();
         data.Add(usernameKey, username);
         data.Add(passwordKey, password);
+        data.Add(captchaKey, captcha);
         data.Add("once", once);
         data.Add("next", "/");
         FormUrlEncodedContent postData = new FormUrlEncodedContent(data);
@@ -108,8 +166,9 @@ namespace V2EX.Service.Login {
 
         // 登陆成功.
         if (res != null && res.StatusCode == HttpStatusCode.OK) {
-          // 将 Cookie 拼接为字符串并赋值给静态成员 cookie.
+          // 将 Cookie 拼接为字符串.
           var cookieList = cookieCtnr.GetCookies(url).Cast<Cookie>().ToList();
+          var cookie = "";
 
           // 拼接字符串.
           cookieList.ForEach(item => {
@@ -120,15 +179,13 @@ namespace V2EX.Service.Login {
           cookie = cookie.Replace("\"", "");
 
           // 登陆成功.
-          isLogin = true;
-          resolve?.Invoke(true);
+          return cookie;
         } else {
           // 其他情况均为失败.
-          reject?.Invoke("logic", new Exception("登陆失败"));
+          throw new Exception("SERVER_RESPONSE_" + res.StatusCode);
         }
       } catch (Exception error) {
-        reject?.Invoke("error", error);
-
+        throw error;
       }
     }
 

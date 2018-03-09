@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using V2EX.Service.EventBus;
+using V2EX.Service.Login;
 
 namespace V2EX.Views.Login {
   public class ViewModel: INotifyPropertyChanged {
@@ -11,19 +12,9 @@ namespace V2EX.Views.Login {
       get {
         return _loading;
       }
-
       set {
         _loading = value;
         this.notify("loading");
-      }
-    }
-
-    public bool isLogin {
-      get {
-        return Service.Login.Service.isLogin;
-      }
-      set {
-        this.notify("isLogin");
       }
     }
 
@@ -35,7 +26,6 @@ namespace V2EX.Views.Login {
       get {
         return this._username;
       }
-      
       set {
         this._username = value;
         this.notify("username");
@@ -50,7 +40,6 @@ namespace V2EX.Views.Login {
       get {
         return this._password;
       }
-
       set {
         this._password = value;
         this.notify("password");
@@ -58,17 +47,30 @@ namespace V2EX.Views.Login {
     }
 
     /// <summary>
-    /// 错误登陆类型.
+    /// 验证码.
     /// </summary>
-    private string _loginErrorType;
-    public string loginErrorType {
+    private string _captcha;
+    public string captcha {
       get {
-        return this._loginErrorType;
+        return this._captcha;
       }
-      
       set {
-        this._loginErrorType = value;
-        this.notify("wrongPassHint");
+        this._captcha = value;
+        this.notify("captcha");
+      }
+    }
+
+    /// <summary>
+    /// 验证码图片 URL.
+    /// </summary>
+    private string _captchaUrl;
+    public string captchaUrl {
+      get {
+        return this._captchaUrl;
+      }
+      set {
+        this._captchaUrl = value;
+        this.notify("captchaUrl");
       }
     }
 
@@ -83,26 +85,46 @@ namespace V2EX.Views.Login {
   /// </summary>
   public sealed partial class View : Page {
     private ViewModel vm { get; set; }
+    private Service.Login.V2EXLoginPeparingData preparingData { get; set; }
+
+    /// <summary>
+    /// 获取登陆预置数据.
+    /// </summary>
+    private async void getPreparingData () {
+      try {
+        var result = await Service.Login.Service.getLoginPresetData();
+        this.preparingData = result;
+      } catch (Exception error) {
+        // TODO: Error Handler.
+      }
+    }
 
     /// <summary>
     /// 登陆函数.
     /// </summary>
-    private void login (object sender, RoutedEventArgs e) {
+    private async void login (object sender, RoutedEventArgs e) {
       var username = this.vm.username;
       var password = this.vm.password;
+      var captcha = this.vm.captcha;
+      var once = this.preparingData.once;
+      var usernameKey = this.preparingData.usernameKey;
+      var passwordKey = this.preparingData.passwordKey;
+      var captchaKey = this.preparingData.captchaKey;
 
       this.vm.loading = true;
-      Service.Login.Service.login(username, password, (bool isLogin) => {
-        this.vm.loginErrorType = null;
-        this.vm.isLogin = isLogin;  // 只是通知数据更改，从 Login 服务中的静态成员重新获取数据. 不知道有没有效果.
-        this.vm.loading = false;
+
+      try {
+        await Service.Login.Service.login(
+          username, password, once, captcha, usernameKey, passwordKey, captchaKey
+        );
 
         // 登陆成功后后退.
         EventBus.emit("AppCanvas:GoBack", null);
-      }, (string errorType, Exception error) => {
-        this.vm.loginErrorType = errorType;
-        this.vm.loading = false;
-      });
+      } catch (Exception error) {
+        // TODO: Error handler.
+      }
+
+      this.vm.loading = false;
     }
 
     private void initVM () {
@@ -114,6 +136,7 @@ namespace V2EX.Views.Login {
     public View() {
       this.InitializeComponent();
       this.initVM();
+      this.getPreparingData();
     }
   }
 }
